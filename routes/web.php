@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\SignupController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return redirect()->route('home');
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -18,9 +19,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
 });
 
-// Sign up route (if needed)
-Route::get('/signup', function () {
-    return view('signup');
-})->name('signup');
+Route::get('/signup', [SignupController::class, 'showSignupForm'])->name('signup');
+Route::post('/signup', [SignupController::class, 'signUp'])->name('signup.post');
 
 
