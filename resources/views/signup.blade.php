@@ -13,10 +13,10 @@
 </head>
 <body style="background-image: linear-gradient(#00263ab0, #00263ab0), url({{ asset('images/Sport-Center-UB.jpg') }})">
     <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="w-full max-w-5xl">
+        <div class="w-full max-w-4xl">
             <div class="flex justify-center">
                 <div class="w-full md:w-3/4 bg-gradient-to-br from-[#ccd9e0] to-[#CEDDE6] md:p-12 flex items-center justify-center rounded-3xl shadow-2xl">
-                    <div class="w-full max-w-md py-3">
+                    <div class="w-full max-w-lg">
                         <h1 class="text-4xl text-center font-bold text-[#004a73] mb-8 italic">
                             Let's Burn Together!
                         </h1>
@@ -29,7 +29,7 @@
                                 </ul>
                             </div>
                         @endif --}}
-                        <form action="{{ route('signup.post') }}">
+                        <form action="{{ route('signup.post') }}" class="mb-0">
                             @csrf
                             {{-- nama --}}
                             <div class="relative mb-5">
@@ -40,7 +40,7 @@
                                     type="text" 
                                     name="nama_lengkap" 
                                     value="{{ old('nama_lengkap') }}"
-                                    placeholder="Name"
+                                    placeholder="Nama Lengkap"
                                     required
                                     class="w-full pl-12 pr-4 py-4 bg-white rounded-full border-2 border-gray-200 focus:border-[#004a73] focus:outline-none transition-colors @error('nama_lengkap') border-red-500 @enderror"
                                 >
@@ -91,15 +91,15 @@
                                 </span>
                                 <input 
                                     type="password" 
-                                    name="password_confirmation" 
-                                    id="password_confirmation"
-                                    placeholder="Confirm Password"
+                                    name="konfirmasi_password" 
+                                    id="konfirmasi_password"
+                                    placeholder="Konfirmasi Password"
                                     required
                                     class="w-full pl-12 pr-12 py-4 bg-white rounded-full border-2 border-gray-200 focus:border-[#004a73] focus:outline-none transition-colors"
                                 >
                                 <button 
                                     type="button" 
-                                    onclick="togglePassword('password_confirmation', 'eyeIcon2')"
+                                    onclick="togglePassword('konfirmasi_password', 'eyeIcon2')"
                                     class="absolute right-4 top-1/2 -translate-y-1/2 text-[#004a73] hover:text-[#003d5e]">
                                     <span id="eyeIcon2">
                                         <img src="{{ asset('images/eye-off.svg') }}" class="mr-1">
@@ -107,7 +107,7 @@
                                 </button>
                             </div>
                             {{-- terms n condition --}}
-                            <div class="flex items-center justify-center space-x-2 mb-2">
+                            <div class="flex items-center justify-center space-x-2 mb-3">
                                 <input 
                                     type="checkbox" 
                                     name="terms" 
@@ -120,31 +120,41 @@
                                 </label>
                             </div>
 
-                            <div class="flex gap-3 pt-4">
-                                <!-- UMUM Button -->
-                                <button 
-                                    type="submit"
-                                    name="kategori"
-                                    value="umum"
-                                    class="flex-1 bg-white text-[#004a73] font-bold py-4 px-6 rounded-full border-2 border-[#004a73]
-                                    hover:bg-[#004a73] hover:text-white transition duration-300 uppercase tracking-wide"
-                                >
-                                    Warga Umum
-                                </button>
+                            <div class="space-y-2">
+                                <div class="flex gap-3">
+                                    <button 
+                                        type="button"
+                                        value="umum"
+                                        onclick="pilihKategori('umum')"
+                                        id="btn-umum"
+                                        class="flex-1 bg-white text-[#004a73] font-bold py-4 px-6 rounded-full border-2 border-[#004a73] hover:bg-gray-100 transition duration-300 uppercase tracking-wide">
+                                        Warga Umum
+                                    </button>
 
-                                <!-- WARGA UB Button -->
+                                    <button 
+                                        type="button"
+                                        value="warga_ub"
+                                        onclick="pilihKategori('warga_ub')"
+                                        id="btn-warga_ub"
+                                        class="flex-1 bg-white text-[#004a73] font-bold py-4 px-6 rounded-full border-2 border-[#004a73] hover:bg-gray-100 transition duration-300 uppercase tracking-wide">
+                                        Warga UB
+                                    </button>
+                                </div>
+                                <input type="hidden" name="kategori" id="kategori" value="" required>
+                                @error('kategori')
+                                    <p class="text-red-500 text-sm text-center mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="pt-4">
                                 <button 
                                     type="submit"
-                                    name="kategori"
-                                    value="warga_ub"
-                                    class="flex-1 bg-white text-[#004a73] font-bold py-4 px-6 rounded-full border-2 border-[#004a73]
-                                    hover:bg-[#004a73] hover:text-white transition duration-300 uppercase tracking-wide">
-                                    Warga UB
+                                    class="w-full bg-[#004a73] text-white font-bold py-4 px-6 rounded-full hover:bg-[#003d5e] transition duration-300 uppercase tracking-wide shadow-lg hover:shadow-xl">
+                                    Sign Up
                                 </button>
-                                {{-- harusnya sih ada routing ke verifikasi akun klo submit warga ub --}}
                             </div>
                             
-                            <p class="text-center text-gray-600 pt-5">
+                            <p class="text-center text-gray-600 mt-4 mb-0">
                                 Sudah punya akun? 
                                 <a href="{{ route('login') }}" class="text-[#004a73] font-semibold hover:underline">
                                     Log In
@@ -156,6 +166,25 @@
             </div>
         </div>
     </div>
+<script>
+        let pilihanKategori = '';
+
+        function pilihKategori(category) {
+            pilihanKategori = category;
+            document.getElementById('kategori').value = category;
+            
+            // Reset all buttons to default style
+            document.getElementById('btn-umum').className = 'flex-1 bg-white text-[#004a73] font-bold py-4 px-6 rounded-full border-2 border-[#004a73] hover:bg-gray-50 transition duration-300 uppercase tracking-wide';
+            document.getElementById('btn-warga_ub').className = 'flex-1 bg-white text-[#004a73] font-bold py-4 px-6 rounded-full border-2 border-[#004a73] hover:bg-gray-50 transition duration-300 uppercase tracking-wide';
+            
+            // Highlight selected button
+            if (category === 'umum') {
+                document.getElementById('btn-umum').className = 'flex-1 bg-[#004a73] text-white font-bold py-4 px-6 rounded-full border-2 border-[#004a73] transition duration-300 uppercase tracking-wide shadow-lg';
+            } else if (category === 'warga_ub') {
+                document.getElementById('btn-warga_ub').className = 'flex-1 bg-[#004a73] text-white font-bold py-4 px-6 rounded-full border-2 border-[#004a73] transition duration-300 uppercase tracking-wide shadow-lg';
+            }
+        }
+</script>
 <script>
         function togglePassword(inputId, iconId) {
             const passwordInput = document.getElementById(inputId);

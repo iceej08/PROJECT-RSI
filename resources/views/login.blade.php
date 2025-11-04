@@ -17,10 +17,10 @@
 <body style="background-image: linear-gradient(#00263ab0, #00263ab0), url({{ asset('images/Sport-Center-UB.jpg') }})">
     <div class="min-h-screen flex items-center justify-center p-4">
         <!-- Login Card -->
-        <div class="w-full max-w-5xl">
+        <div class="w-full max-w-4xl">
             <div class="flex justify-center">
                 <div class="w-full md:w-3/4 bg-gradient-to-br from-[#ccd9e0] to-[#CEDDE6] md:p-12 flex items-center justify-center rounded-3xl shadow-2xl">
-                    <div class="w-full max-w-md py-3">
+                    <div class="w-full max-w-md">
                         <h1 class="text-3xl text-center font-bold text-[#004a73] mb-8 italic">
                             Hello there! Ready to hit it?
                         </h1>
@@ -46,9 +46,7 @@
                             {{-- email --}}
                             <div class="relative">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#004a73]">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                    </svg>
+                                    <img src="{{ asset('images/mail.svg') }}">
                                 </span>
                                 <input 
                                     type="email" 
