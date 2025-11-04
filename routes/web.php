@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\SignupController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -13,14 +14,12 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Protected routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/', function () { // ini hrsnya ke welcome page
+        return view('');
+    })->name('');
 });
 
-// Sign up route (if needed)
-Route::get('/signup', function () {
-    return view('signup');
-})->name('signup');
+Route::get('/signup', [SignupController::class, 'showSignupForm'])->name('signup');
+Route::post('/signup', [SignupController::class, 'signUp'])->name('signup.post');
 
 
