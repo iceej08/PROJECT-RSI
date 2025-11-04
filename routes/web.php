@@ -5,7 +5,7 @@ use App\Http\Controllers\SignupController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('home');
+    return redirect()->route('login');
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -14,9 +14,9 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Protected routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/', function () { // ini hrsnya ke welcome page
+        return view('');
+    })->name('');
 });
 
 Route::get('/signup', [SignupController::class, 'showSignupForm'])->name('signup');
