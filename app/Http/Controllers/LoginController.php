@@ -26,27 +26,50 @@ class LoginController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
+        if (Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-
-            return redirect()->intended('dashboard')->with('success', 'Welcome back!');
+            
+            $admin = Auth::guard('admin')->user();
+            
+            // Redirect to admin dashboard
+            return redirect()->route('admin.dashboard')
+                ->with('success', 'Selamat datang, Admin ' . $admin->nama_lengkap . '!');
         }
 
+        if (Auth::guard('web')->attempt($credentials, $request->filled('remember'))) {
+            $request->session()->regenerate();
+
+            $user = Auth::guard('web')->user();
+
+            // Check if user is Warga UB and not verified yet
+            if ($user->kategori === true && $user->status_verifikasi === 'pending') {
+                Auth::guard('web')->logout();
+                return redirect()->route('login')
+                    ->with('error', 'Akun Anda masih dalam proses verifikasi. Silakan tunggu hingga admin memverifikasi identitas Anda.');
+            }
+
+            return redirect()->route('welcome')
+                ->with('success', 'Selamat datang, ' . $user->nama_lengkap . '!');
+    }
         throw ValidationException::withMessages([
             'email' => ['The provided credentials do not match our records.'],
         ]);
-    }
+}
 
     /**
      * Handle logout
      */
     public function logout(Request $request)
     {
-        Auth::logout();
+        if (Auth::guard('admin')->check()) {
+            Auth::guard('admin')->logout();
+        } elseif (Auth::guard('web')->check()) {
+            Auth::guard('web')->logout();
+        }
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('')->with('success', 'You have been logged out.');
+        return redirect()->route('login')->with('success', 'You have been logged out.');
     }
 }

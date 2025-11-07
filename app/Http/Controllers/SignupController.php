@@ -7,14 +7,12 @@ use App\Models\AkunUbsc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rules\Password;
 
 class SignupController extends Controller
 {
-    /**
-     * Show the signup form
-     */
-    public function showSignupForm()
+    public function showSignUpForm()
     {
         return view('signup');
     }
@@ -43,20 +41,35 @@ class SignupController extends Controller
             'terms.accepted' => 'Anda harus menyetujui syarat dan ketentuan',
         ]);
 
-        // Create new user account
+        // If user chooses "Warga UB", store data in session and redirect to upload page
+        if ($validated['kategori'] === 'warga_ub') {
+            // Store signup data in session temporarily
+            Session::put('signup_data', [
+                'nama_lengkap' => $validated['nama_lengkap'],
+                'email' => $validated['email'],
+                'password' => $validated['password'], // Will be hashed later
+                'kategori' => true, // true = warga_ub
+            ]);
+
+            // Redirect to identity upload page
+            return redirect()->route('signup.upload-identity')
+                ->with('info', 'Silakan upload foto identitas Anda untuk verifikasi sebagai Warga UB.');
+        }
+
+        // warga umum
         $akun = AkunUbsc::create([
             'nama_lengkap' => $validated['nama_lengkap'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'no_hp' => $validated['no_hp'] ?? null,
-            'kategori' => $validated['kategori'] === 'warga_ub' ? true : false,
-            'status_verifikasi' => 'pending',
+            'kategori' => false, // false = umum
+            'foto_identitas' => null, // No identity photo needed
+            'status_verifikasi' => null, // No verification needed for Umum
             'tgl_daftar' => now()->toDateString(),
         ]);
 
-        // Auto login after registration
-        Auth::guard('web')->login($akun);
-
-        return redirect()->route('welcome')->with('success', 'Akun berhasil dibuat! Selamat datang di UB Sport Center.');
+        return redirect()->route('login')
+            ->with('success', 'Akun berhasil dibuat! Silakan login untuk melanjutkan.');
     }
+
+    
 }
