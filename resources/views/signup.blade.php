@@ -20,16 +20,16 @@
                         <h1 class="text-4xl text-center font-bold text-[#004a73] mb-8 italic">
                             Let's Burn Together!
                         </h1>
-                        {{-- @if($errors->any())
+                        @if($errors->any())
                             <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl">
                                 <ul class="text-red-600 text-sm space-y-1">
                                     @foreach($errors->all() as $error)
-                                        <li>• {{ $error }}</li>
+                                        <li>{{ $error }}</li>
                                     @endforeach
                                 </ul>
                             </div>
-                        @endif --}}
-                        <form action="{{ route('signup.post') }}" class="mb-0">
+                        @endif
+                        <form action="{{ route('signup.post') }}" method="POST" class="mb-0">
                             @csrf
                             {{-- nama --}}
                             <div class="relative mb-5">
@@ -91,8 +91,8 @@
                                 </span>
                                 <input 
                                     type="password" 
-                                    name="konfirmasi_password" 
-                                    id="konfirmasi_password"
+                                    name="password_confirmation" 
+                                    id="password_confirmation"
                                     placeholder="Konfirmasi Password"
                                     required
                                     class="w-full pl-12 pr-12 py-4 bg-white rounded-full border-2 border-gray-200 focus:border-[#004a73] focus:outline-none transition-colors"

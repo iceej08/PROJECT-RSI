@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('password', 100);
             $table->boolean('kategori')->default(false);
             $table->string('foto_identitas', 255)->nullable();
-            $table->enum('status_verifikasi', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('status_verifikasi', ['pending', 'approved', 'rejected'])->nullable();
             $table->date('tgl_daftar');
             $table->timestamps();
         });
