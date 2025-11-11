@@ -48,11 +48,12 @@ class SignupController extends Controller
                 'nama_lengkap' => $validated['nama_lengkap'],
                 'email' => $validated['email'],
                 'password' => $validated['password'], // Will be hashed later
+                'no_hp' => $validated['no_hp'] ?? null,
                 'kategori' => true, // true = warga_ub
             ]);
 
             // Redirect to identity upload page
-            return redirect()->route('signup.upload-identity')
+            return redirect()->route('signup.upload-identitas')
                 ->with('info', 'Silakan upload foto identitas Anda untuk verifikasi sebagai Warga UB.');
         }
 
@@ -61,6 +62,7 @@ class SignupController extends Controller
             'nama_lengkap' => $validated['nama_lengkap'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'no_hp' => $validated['no_hp'] ?? null,
             'kategori' => false, // false = umum
             'foto_identitas' => null, // No identity photo needed
             'status_verifikasi' => null, // No verification needed for Umum
@@ -71,5 +73,79 @@ class SignupController extends Controller
             ->with('success', 'Akun berhasil dibuat! Silakan login untuk melanjutkan.');
     }
 
+    // upload page
+    public function showUploadIdentitas()
+    {
+        // Check if signup data exists in session
+        if (!Session::has('signup_data')) {
+            return redirect()->route('signup')->with('error', 'Silakan isi form pendaftaran terlebih dahulu.');
+        }
+
+        return view('upload-identitas');
+    }
+
+    /**
+     * Handle identity upload and complete registration
+     */
+    public function uploadIdentitas(Request $request)
+    {
+        // Validate session data exists
+        if (!Session::has('signup_data')) {
+            return redirect()->route('signup')->with('error', 'Silakan isi form pendaftaran terlebih dahulu.');
+        }
+
+        // Validate file upload
+        $request->validate([
+            'foto_identitas' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'], // Max 2MB
+        ], [
+            'foto_identitas.required' => 'Foto identitas wajib diupload',
+            'foto_identitas.image' => 'File harus berupa gambar',
+            'foto_identitas.mimes' => 'Format file harus jpeg, png, atau jpg',
+            'foto_identitas.max' => 'Ukuran file maksimal 2MB',
+        ]);
+
+        // Get signup data from session
+        $signupData = Session::get('signup_data');
+
+        // Handle file upload
+        $fotoIdentitasPath = null;
+        if ($request->hasFile('foto_identitas')) {
+            $file = $request->file('foto_identitas');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $fotoIdentitasPath = $file->storeAs('identitas', $filename, 'public');
+        }
+
+        // Create new user account with identity photo
+        $akun = AkunUbsc::create([
+            'nama_lengkap' => $signupData['nama_lengkap'],
+            'email' => $signupData['email'],
+            'password' => Hash::make($signupData['password']),
+            'no_hp' => $signupData['no_hp'],
+            'kategori' => $signupData['kategori'], // true = warga_ub
+            'foto_identitas' => $fotoIdentitasPath,
+            'status_verifikasi' => 'pending', // Warga UB needs admin verification
+            'tgl_daftar' => now()->toDateString(),
+        ]);
+
+        // Clear session data
+        Session::forget('signup_data');
+
+        return redirect()->route('signup.verification-pending')
+            ->with('email', $akun->email);
+    }
+
+    /**
+     * Show verification pending page (for Warga UB after uploading identity)
+     */
+    public function showVerificationPending()
+    {
+        $email = session('email');
+        
+        if (!$email) {
+            return redirect()->route('login');
+        }
+
+        return view('verification-pending', compact('email'));
+    }
     
 }
