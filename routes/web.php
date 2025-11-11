@@ -32,8 +32,8 @@ Route::get('/signup', [SignUpController::class, 'showSignUpForm'])->name('signup
 Route::post('/signup', [SignUpController::class, 'signUp'])->name('signup.post');
 
 // Identity upload routes (for Warga UB only)
-Route::get('/signup/upload-identity', [SignUpController::class, 'showUploadIdentity'])->name('signup.upload-identity');
-Route::post('/signup/upload-identity', [SignUpController::class, 'uploadIdentity'])->name('signup.upload-identity.post');
+Route::get('/signup/upload-identity', [SignUpController::class, 'showUploadIdentitas'])->name('signup.upload-identitas');
+Route::post('/signup/upload-identity', [SignUpController::class, 'uploadIdentitas'])->name('signup.upload-identitas.post');
 
 // Verification pending page (for Warga UB after upload)
 Route::get('/signup/verification-pending', [SignUpController::class, 'showVerificationPending'])->name('signup.verification-pending');
