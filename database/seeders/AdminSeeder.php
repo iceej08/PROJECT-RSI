@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
-use App\Models\Admin\Admin;
+use App\Models\Admin;
 
 class AdminSeeder extends Seeder
 {
