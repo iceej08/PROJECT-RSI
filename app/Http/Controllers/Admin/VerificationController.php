@@ -7,12 +7,18 @@ use App\Models\AkunUbsc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use App\Mail\VerificationApproved;
+use App\Mail\VerificationRejected;
 
 class VerificationController extends Controller
 {
     public function index()
     {
-        $accounts = AkunUbsc::orderBy('id_akun', 'desc')->get();
+        $accounts = AkunUbsc::where('kategori', 1)
+            ->where('status_verifikasi', 'pending')
+            ->whereNotNull('foto_identitas')
+            ->orderBy('created_at', 'desc')
+            ->get();
         
         return view('admin.verification.index', compact('accounts'));
     }
@@ -44,10 +50,17 @@ class VerificationController extends Controller
             'tgl_daftar' => $account->tgl_daftar ?? now()
         ]);
 
-        // TODO: Send email notification to user
-        Mail::to($account->email)->send(new VerificationApproved($account));
+        Log::info('Account approved:', ['id' => $id, 'email' => $account->email]);
+
+        // Send email notification
+        try {
+            Mail::to($account->email)->send(new VerificationApproved($account));
+            Log::info('Approval email sent to: ' . $account->email);
+        } catch (\Exception $e) {
+            Log::error('Failed to send approval email: ' . $e->getMessage());
+        }
         
-        return redirect()->back()->with('success', 'Akun berhasil diverifikasi sebagai Warga UB!');
+        return redirect()->back()->with('success', 'Akun berhasil diverifikasi sebagai Warga UB dan email notifikasi telah dikirim!');
     }
 
     public function reject($id)
@@ -55,13 +68,22 @@ class VerificationController extends Controller
         $account = AkunUbsc::findOrFail($id);
         
         $account->update([
-            'kategori' => 0, // Umum
-            'status_verifikasi' => 'terverifikasi',
-            'tgl_daftar' => now()
+            'kategori' => 0, // Change to Umum
+            'status_verifikasi' => 'rejected',
+            'tgl_daftar' => $account->tgl_daftar ?? now()
         ]);
 
-        // TODO: Send email notification to user
+        Log::info('Account rejected:', ['id' => $id, 'email' => $account->email]);
+
+        // TODO: Send email notification
+        try {
+            Mail::to($account->email)->send(new VerificationRejected($account));
+            Log::info('Rejection email sent to: ' . $account->email);
+        } catch (\Exception $e) {
+            Log::error('Failed to send rejection email: ' . $e->getMessage());
+            // Continue even if email fails
+        }
         
-        return redirect()->back()->with('info', 'Akun ditolak dan dikategorikan sebagai Umum.');
+       return redirect()->back()->with('info', 'Akun ditolak dan dikategorikan sebagai Umum. Email notifikasi telah dikirim.');
     }
 }

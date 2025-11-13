@@ -10,21 +10,25 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalAccounts = AkunUbsc::count();
-        // $verifiedAccounts = AkunUbsc::where('status_verifikasi', 'terverifikasi')->count();
+        // Stats Cards
+        $totalAkunUbsc = AkunUbsc::count();
         $pendingVerification = AkunUbsc::where('status_verifikasi', 'pending')->count();
+        
+        // Note: You'll need to create akun_membership table later
+        // For now, let's use a placeholder
         $activeMemberships = 0; // AkunMembership::where('status', 'active')->count();
 
+        // Recent Activities (Last 10)
         $recentActivities = $this->getRecentActivities();
 
         return view('admin.dashboard', compact(
-            'totalAccounts',
-            'verifiedAccounts',
-            'pendingAccounts',
-            'wargaUB',
-            'umum'
+            'totalAkunUbsc',
+            'pendingVerification',
+            'activeMemberships',
+            'recentActivities'
         ));
     }
+
     private function getRecentActivities()
     {
         $activities = collect();
@@ -58,7 +62,7 @@ class DashboardController extends Controller
                     $activity['icon_color'] = 'text-yellow-600';
                     $activity['title'] = 'Pendaftaran Warga UB - Menunggu Verifikasi';
                     $activity['description'] = $account->email;
-                } elseif ($activity['status_verifikasi'] == 'approved') {
+                } elseif ($account['status_verifikasi'] == 'approved') {
                     $activity['type'] = 'warga_ub_approved';
                     $activity['icon'] = 'check-circle';
                     $activity['icon_bg'] = 'bg-green-100';
