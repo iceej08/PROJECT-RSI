@@ -32,6 +32,34 @@ class AkunUbsc extends Authenticatable
         'tgl_daftar' => 'date',
     ];
 
+    // Accessor for kategori text
+    public function getKategoriTextAttribute()
+    {
+        return $this->kategori ? 'Warga UB' : 'Umum';
+    }
+
+    // Accessor for status badge color
+    public function getStatusBadgeColorAttribute()
+    {
+        return match($this->status_verifikasi) {
+            'approved' => 'bg-green-100 text-green-800',
+            'pending' => 'bg-yellow-100 text-yellow-800',
+            'rejected' => 'bg-red-100 text-red-800',
+            default => 'bg-gray-100 text-gray-800'
+        };
+    }
+
+    // Accessor for status text
+    public function getStatusTextAttribute()
+    {
+        return match($this->status_verifikasi) {
+            'approved' => 'Disetujui',
+            'pending' => 'Menunggu',
+            'rejected' => 'Ditolak',
+            default => 'Unknown'
+        };
+    }
+
     // Relationships
     public function memberships()
     {
