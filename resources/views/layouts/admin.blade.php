@@ -16,8 +16,11 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-[#004a73] text-white flex-shrink-0">
             <div class="p-6">
-                <h1 class="text-2xl font-bold">UB Sport Center</h1>
-                <p class="text-sm text-blue-200">Admin Panel</p>
+                <span class="flex justify-center mb-3">
+                    <img src="{{ asset('images/ubsc-logo.png') }}">
+                </span>
+                <h1 class="text-2xl text-center font-bold">UB Sport Center</h1>
+                <p class="text-sm text-center text-blue-200">Admin Panel</p>
             </div>
             
             <nav class="mt-6">
