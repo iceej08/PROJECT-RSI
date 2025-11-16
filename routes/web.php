@@ -7,18 +7,29 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\VerificationController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\UbscAccountController;
+use App\Http\Controllers\ProfileController;
 
 
 Route::get('/', function () {
     return view('homepage');
+    });
+Route::get('/profile', function () {
+    return view('profile');
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Protected User Routes
+
+Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
+});
+
 Route::middleware(['auth:web'])->group(function () {
+    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'showProfile'])->name('profile');
     Route::get('/welcome', function () {
         return view('welcome');
     })->name('welcome');
