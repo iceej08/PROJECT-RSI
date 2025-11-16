@@ -1,9 +1,13 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Foundation\Auth\User as Authenticatable; 
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute; 
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class AkunUbsc extends Authenticatable
 {
@@ -24,7 +28,6 @@ class AkunUbsc extends Authenticatable
 
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     protected $casts = [
@@ -32,43 +35,56 @@ class AkunUbsc extends Authenticatable
         'tgl_daftar' => 'date',
     ];
 
-    // Accessor for kategori text
-    public function getKategoriTextAttribute()
+    protected function kategoriText(): Attribute
     {
-        return $this->kategori ? 'Warga UB' : 'Umum';
+        return Attribute::make(
+            get: fn () => $this->kategori ? 'Warga UB' : 'Umum',
+        );
     }
 
-    // Accessor for status badge color
-    public function getStatusBadgeColorAttribute()
+    protected function statusBadgeColor(): Attribute
     {
-        return match($this->status_verifikasi) {
-            'approved' => 'bg-green-100 text-green-800',
-            'pending' => 'bg-yellow-100 text-yellow-800',
-            'rejected' => 'bg-red-100 text-red-800',
-            default => 'bg-gray-100 text-gray-800'
-        };
+        return Attribute::make(
+            get: fn () => match($this->status_verifikasi) {
+                'approved' => 'bg-green-100 text-green-800',
+                'pending' => 'bg-yellow-100 text-yellow-800',
+                'rejected' => 'bg-red-100 text-red-800',
+                default => 'bg-gray-100 text-gray-800'
+            },
+        );
     }
 
-    // Accessor for status text
-    public function getStatusTextAttribute()
+    protected function statusText(): Attribute
     {
-        return match($this->status_verifikasi) {
-            'approved' => 'Disetujui',
-            'pending' => 'Menunggu',
-            'rejected' => 'Ditolak',
-            default => 'Unknown'
-        };
+        return Attribute::make(
+            get: fn () => match($this->status_verifikasi) {
+                'approved' => 'Disetujui',
+                'pending' => 'Menunggu',
+                'rejected' => 'Ditolak',
+                default => 'Unknown'
+            },
+        );
     }
-    // Relationships
-    public function memberships()
+
+    public function memberships(): HasMany
     {
         return $this->hasMany(AkunMembership::class, 'id_akun');
     }
     
-    public function activeMembership()
+    public function activeMembership(): HasOne
     {
         return $this->hasOne(AkunMembership::class, 'id_akun')
-                    ->where('status', true)
+                    ->where('status', true) 
                     ->where('tgl_berakhir', '>=', now());
+    }
+    
+    public function latestMembership(): HasOne
+    {
+        return $this->hasOne(AkunMembership::class, 'id_akun')->latestOfMany('created_at');
+    }
+    
+    public function membership(): HasOne
+    {
+        return $this->latestMembership();
     }
 }
