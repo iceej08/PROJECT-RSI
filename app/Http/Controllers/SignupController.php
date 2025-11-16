@@ -26,7 +26,6 @@ class SignupController extends Controller
             'nama_lengkap' => ['required', 'string', 'max:100'],
             'email' => ['required', 'string', 'email', 'max:100', 'unique:akun_ubsc,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'no_hp' => ['nullable', 'string', 'max:20'],
             'kategori' => ['required', 'in:umum,warga_ub'],
             'terms' => ['accepted'],
         ], [
@@ -48,7 +47,6 @@ class SignupController extends Controller
                 'nama_lengkap' => $validated['nama_lengkap'],
                 'email' => $validated['email'],
                 'password' => $validated['password'], // Will be hashed later
-                'no_hp' => $validated['no_hp'] ?? null,
                 'kategori' => true, // true = warga_ub
             ]);
 
@@ -62,10 +60,9 @@ class SignupController extends Controller
             'nama_lengkap' => $validated['nama_lengkap'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'no_hp' => $validated['no_hp'] ?? null,
             'kategori' => false, // false = umum
             'foto_identitas' => null, // No identity photo needed
-            'status_verifikasi' => null, // No verification needed for Umum
+            'status_verifikasi' => 'approved', // No verification needed for Umum
             'tgl_daftar' => now()->toDateString(),
         ]);
 
@@ -120,7 +117,6 @@ class SignupController extends Controller
             'nama_lengkap' => $signupData['nama_lengkap'],
             'email' => $signupData['email'],
             'password' => Hash::make($signupData['password']),
-            'no_hp' => $signupData['no_hp'],
             'kategori' => $signupData['kategori'], // true = warga_ub
             'foto_identitas' => $fotoIdentitasPath,
             'status_verifikasi' => 'pending', // Warga UB needs admin verification
@@ -141,9 +137,9 @@ class SignupController extends Controller
     {
         $email = session('email');
         
-        if (!$email) {
-            return redirect()->route('login');
-        }
+        // if (!$email) {
+        //     return redirect()->route('login');
+        // }
 
         return view('verification-pending', compact('email'));
     }

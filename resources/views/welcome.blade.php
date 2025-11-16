@@ -7,6 +7,8 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <a href="{{ route('pelanggan.pilih-paket') }}" class="text-[#004a73] font-semibold hover:underline">
+        Daftar Membership
+    </a>
 </body>
 </html>
