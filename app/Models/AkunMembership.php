@@ -3,13 +3,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AkunMembership extends Model
 {
     use HasFactory;
 
-    protected $table = 'akun_membership';
+    protected $table = 'akun_membership'; 
     protected $primaryKey = 'id_membership';
+    public $timestamps = true;
+    
+    protected $keyType = 'int'; 
+    public $incrementing = true;
+
 
     protected $fillable = [
         'id_akun',
@@ -24,32 +32,36 @@ class AkunMembership extends Model
         'status' => 'boolean',
     ];
 
-    // Relationships
-    public function akun()
+    public function akun(): BelongsTo
     {
-        return $this->belongsTo(AkunUbsc::class, 'id_akun');
+        return $this->belongsTo(AkunUbsc::class, 'id_akun', 'id_akun');
     }
 
-    public function transaksis()
+    public function transaksis(): HasMany
     {
         return $this->hasMany(Transaksi::class, 'id_membership');
     }
 
-    public function pembayarans()
+    public function pembayarans(): HasMany
     {
         return $this->hasMany(Pembayaran::class, 'id_membership');
     }
 
-    public function isActive()
+    public function isActive(): bool
     {
-        return $this->status && $this->tgl_berakhir >= now();
+        $today = Carbon::now()->startOfDay();
+
+        return $this->status 
+            && $this->tgl_berakhir instanceof Carbon
+            && $this->tgl_berakhir->endOfDay()->greaterThanOrEqualTo($today);
     }
 
-    public function daysRemaining()
+    public function daysRemaining(): int
     {
         if (!$this->isActive()) {
             return 0;
         }
-        return now()->diffInDays($this->tgl_berakhir);
+        
+        return Carbon::now()->diffInDays($this->tgl_berakhir, false) + 1;
     }
 }
