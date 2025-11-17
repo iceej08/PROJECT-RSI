@@ -14,6 +14,7 @@
 <body class="bg-gray-100">
     <div class="flex h-screen">
         <!-- Sidebar -->
+
         <aside class="w-64 bg-[#004a73] text-white flex-shrink-0">
             <div class="p-6">
                 <span class="flex justify-center mb-3">
@@ -24,6 +25,7 @@
             </div>
             
             <nav class="mt-6">
+
                 <a href="{{ route('admin.dashboard') }}" 
                 class="flex items-center px-6 py-3 {{ request()->routeIs('admin.dashboard') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,6 +34,7 @@
                     Dashboard
                 </a>
                 
+
                 <a href="{{ route('admin.verification.index') }}" 
                 class="flex items-center px-6 py-3 {{ request()->routeIs('admin.verification.*') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,6 +43,7 @@
                     Verifikasi UBSC
                 </a>
                 
+
                 <a href="{{ route('admin.ubsc_account.index') }}" 
                 class="flex items-center px-6 py-3 {{ request()->routeIs('admin.ubsc_account.*') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,6 +52,7 @@
                     Akun UBSC
                 </a>
                 
+
                 <a href="#" class="flex items-center px-6 py-3 hover:bg-[#003d5e] transition">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
@@ -55,6 +60,7 @@
                     Akun Member
                 </a>
                 
+
                 <a href="#" class="flex items-center px-6 py-3 hover:bg-[#003d5e] transition">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
@@ -62,16 +68,30 @@
                     Verifikasi Pembayaran
                 </a>
                 
-                <a href="#" class="flex items-center px-6 py-3 hover:bg-[#003d5e] transition">
+                <!-- FAQ Management -->
+                <a href="{{ route('admin.faq.index') }}" 
+                   class="flex items-center px-6 py-3 {{ request()->routeIs('admin.faq.*') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
+
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     FAQ
                 </a>
+
+                <!-- Promosi Management -->
+                <a href="{{ route('admin.promosi.index') }}" 
+                   class="flex items-center px-6 py-3 {{ request()->routeIs('admin.promosi.*') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                    </svg>
+                    Promosi
+                </a>
+
             </nav>
             
             <!-- Logout at bottom -->
             <div class="absolute bottom-0 w-64 p-6">
+
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="flex items-center text-white hover:text-red-300 transition w-full">
@@ -91,6 +111,7 @@
                 <div class="flex items-center justify-between px-8 py-4">
                     <h2 class="text-2xl font-bold text-gray-800">@yield('page-title', 'Dashboard')</h2>
                     <div class="flex items-center space-x-4">
+
                         <span class="text-gray-600">Admin: <span class="font-semibold text-[#004a73]">{{ Auth::guard('admin')->user()->nama_lengkap }}</span></span>
                         <div class="w-10 h-10 bg-[#004a73] rounded-full flex items-center justify-center text-white font-bold">
                             {{ strtoupper(substr(Auth::guard('admin')->user()->nama_lengkap, 0, 1)) }}
@@ -105,6 +126,7 @@
                     <p class="text-green-600 font-semibold">✓ {{ session('success') }}</p>
                 </div>
             @endif
+
 
             @if(session('info'))
                 <div class="m-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
