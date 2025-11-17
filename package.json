@@ -7,14 +7,24 @@
         "dev": "vite"
     },
     "devDependencies": {
+<<<<<<< HEAD
         "@popperjs/core": "^2.11.6",
         "@tailwindcss/vite": "^4.0.0",
+=======
+        "@tailwindcss/vite": "^4.1.17",
+        "autoprefixer": "^10.4.21",
+>>>>>>> de7c89dc71329d7213237582712d09fa6e7e8d02
         "axios": "^1.11.0",
         "bootstrap": "^5.2.3",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^2.0.0",
+<<<<<<< HEAD
         "sass": "^1.56.1",
         "tailwindcss": "^4.0.0",
+=======
+        "postcss": "^8.5.6",
+        "tailwindcss": "^4.1.17",
+>>>>>>> de7c89dc71329d7213237582712d09fa6e7e8d02
         "vite": "^7.0.7"
     }
 }
