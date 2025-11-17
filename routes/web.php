@@ -1,26 +1,40 @@
 <?php
 
-use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\FAQController;
+use App\Http\Controllers\Admin\PromosiController;
+use App\Http\Controllers\HomeController;
+
+// Route User (Homepage)
+Route::get('/homepage', function () {
+    return view('homepage');
+});
+
+Route::get('/welcomepage', function () {
+    return view('welcomepage');
+});
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('welcome');
 });
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login.post');
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+// Route Homepage dengan Data dari Database
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-// Protected routes
-Route::middleware(['auth'])->group(function () {
+// Route untuk Admin (TANPA MIDDLEWARE - Langsung Bisa Diakses)
+Route::prefix('admin')->name('admin.')->group(function () {
+    
+    // Dashboard Admin
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return view('admin.dashboard');
     })->name('dashboard');
+
+    // FAQ Management (CRUD)
+    Route::resource('faq', FAQController::class);
+
+    // Promosi Management (CRUD)
+    Route::resource('promosi', PromosiController::class);
 });
 
-// Sign up route (if needed)
-Route::get('/signup', function () {
-    return view('signup');
-})->name('signup');
-
-
+// Authentication Routes (jika diperlukan nanti)
+Auth::routes();
