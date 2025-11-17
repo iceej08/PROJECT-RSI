@@ -26,7 +26,6 @@ class SignupController extends Controller
             'nama_lengkap' => ['required', 'string', 'max:100'],
             'email' => ['required', 'string', 'email', 'max:100', 'unique:akun_ubsc,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'no_hp' => ['nullable', 'string', 'max:20'],
             'kategori' => ['required', 'in:umum,warga_ub'],
             'terms' => ['accepted'],
         ], [
@@ -48,7 +47,7 @@ class SignupController extends Controller
                 'nama_lengkap' => $validated['nama_lengkap'],
                 'email' => $validated['email'],
                 'password' => $validated['password'],
-                'kategori' => 1, // true = warga_ub
+                'kategori' => true, // true = warga_ub
             ]);
 
             // Redirect to identity upload page
@@ -61,7 +60,7 @@ class SignupController extends Controller
             'nama_lengkap' => $validated['nama_lengkap'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'kategori' => 0, 
+            'kategori' => false, // false = umum
             'foto_identitas' => null, // No identity photo needed
             'status_verifikasi' => 'approved', // No verification needed for Umum
             'tgl_daftar' => now()->toDateString(),
@@ -114,10 +113,10 @@ class SignupController extends Controller
             'nama_lengkap' => $signupData['nama_lengkap'],
             'email' => $signupData['email'],
             'password' => Hash::make($signupData['password']),
-            'kategori' => 1, // 1 = warga_ub
+            'kategori' => $signupData['kategori'], // true = warga_ub
             'foto_identitas' => $fotoIdentitasPath,
-            'status_verifikasi' => 'pending', // Pending until admin approves
-            'tgl_daftar' => null // Will be set when approved
+            'status_verifikasi' => 'pending',
+            'tgl_daftar' => null
         ]);
 
         Session::forget('signup_data');
@@ -132,10 +131,6 @@ class SignupController extends Controller
     public function showVerificationPending()
     {
         $email = session('email');
-        
-        if (!$email) {
-            return redirect()->route('login');
-        }
 
         return view('verification-pending', compact('email'));
     }

@@ -14,7 +14,7 @@
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-100 to-blue-200 min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md">
+    <div class="w-full max-w-lg">
         <!-- Card Container -->
         <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 text-center">
             <!-- Success Icon with Animation -->
@@ -48,7 +48,7 @@
                 <ul class="text-sm text-gray-700 space-y-2">
                     <li class="flex items-start">
                         <span class="text-blue-500 mr-2">•</span>
-                        <span>Proses verifikasi membutuhkan waktu <strong>1-3 hari kerja</strong></span>
+                        <span>Proses verifikasi dilakukan maksimal dalam waktu <strong>1x24 Jam</strong></span>
                     </li>
                     <li class="flex items-start">
                         <span class="text-blue-500 mr-2">•</span>
@@ -92,7 +92,7 @@
         <!-- Additional Info -->
         <div class="mt-6 text-center">
             <p class="text-sm text-gray-600">
-                💡 <strong>Tips:</strong> Pastikan email Anda aktif untuk menerima notifikasi verifikasi
+                💡 <strong>Tips:</strong> Pastikan email Anda aktif untuk menerima notifikasi verifikasi, atau coba login secara berkala
             </p>
         </div>
     </div>
