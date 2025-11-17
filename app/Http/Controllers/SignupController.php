@@ -136,10 +136,6 @@ class SignupController extends Controller
     public function showVerificationPending()
     {
         $email = session('email');
-        
-        // if (!$email) {
-        //     return redirect()->route('login');
-        // }
 
         return view('verification-pending', compact('email'));
     }

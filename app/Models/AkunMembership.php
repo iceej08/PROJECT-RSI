@@ -24,13 +24,6 @@ class AkunMembership extends Model
         'status' => 'boolean',
     ];
 
-    public function scopeApproved($query)
-    {
-        return $query->whereHas('pembayaran', function($q) {
-            $q->where('status', 'verified');
-        });
-    }
-
     // Relationships
     public function akun()
     {
