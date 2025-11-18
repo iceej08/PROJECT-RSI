@@ -5,22 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FAQ extends Model
+class Faq extends Model
 {
     use HasFactory;
 
     protected $table = 'faq';
-    protected $primaryKey = 'Id_FAQ';
-    
+    protected $primaryKey = 'id_faq';
+
     protected $fillable = [
-        'Id_admin',
-        'Pertanyaan',
-        'Jawaban'
+        'id_admin',
+        'pertanyaan',
+        'jawaban',
     ];
 
-    // Relasi ke Admin (jika ada tabel users/admins)
+    // Relationships
     public function admin()
     {
-        return $this->belongsTo(User::class, 'Id_admin');
+        return $this->belongsTo(Admin::class, 'id_admin');
     }
 }

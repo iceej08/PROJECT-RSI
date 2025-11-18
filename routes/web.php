@@ -21,6 +21,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home.index');
 // Dan route /home tetap ada:
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 // Route Homepage dengan Data dari Database
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
@@ -58,10 +62,17 @@ Route::middleware(['auth:web'])->group(function () {
 
 Route::prefix('admin')->name('admin.')->group(function () {
 
+<<<<<<< Updated upstream
     // Admin Auth Routes (PUBLIC - No Middleware)
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+=======
+    // Admin Auth Routes
+    // Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    // Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    // Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+>>>>>>> Stashed changes
 
     // Protected Admin Routes (REQUIRES AUTH)
     Route::middleware(['auth:admin'])->group(function () {
