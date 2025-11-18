@@ -52,7 +52,7 @@
                     <p class="font-semibold text-sm text-gray-900 leading-tight">{{ $akun->nama_lengkap ?? 'Nama Pengguna' }}</p>
                     <p class="text-xs text-gray-700 leading-tight">
                         @if ($is_active)
-                            Premium Member
+                            Member Aktif
                         @else
                             Non-Member
                         @endif

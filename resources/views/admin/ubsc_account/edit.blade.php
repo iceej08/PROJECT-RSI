@@ -4,6 +4,7 @@
 @section('page-title', 'Edit Akun UBSC')
 
 @section('content')
+@include('alert')
 <div class="max-w-2xl">
     <div class="bg-white rounded-xl shadow-md p-6">
         <form action="{{ route('admin.ubsc_account.update', $account->id_akun) }}" method="POST">

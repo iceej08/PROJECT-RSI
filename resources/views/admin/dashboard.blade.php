@@ -1,6 +1,5 @@
 @extends('layouts.admin')
 
-
 @section('title', 'Dashboard - Admin UBSC')
 @section('page-title', 'Dashboard')
 

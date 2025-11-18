@@ -17,21 +17,11 @@
     <div class="min-h-screen flex items-center justify-center p-4">
             <!-- Main Card -->
                 <div class="w-2/3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-3xl p-8 md:p-14">
+                    @include('alert')
                     <!-- Title -->
                     <h1 class="text-3xl md:text-4xl font-bold text-[#003d5e] mb-8">
                         Foto identitas Warga UB
                     </h1>
-
-                    <!-- Error Messages -->
-                    @if($errors->any())
-                        <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl">
-                            <ul class="text-red-600 text-sm space-y-1">
-                                @foreach($errors->all() as $error)
-                                    <li>• {{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
 
                     <!-- Upload Form -->
                     <form action="{{ route('signup.upload-identitas.post') }}" method="POST" enctype="multipart/form-data">
