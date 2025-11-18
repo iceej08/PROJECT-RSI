@@ -132,6 +132,6 @@ class ProfileController extends Controller
     public function edit()
     {
         $akun = Auth::user(); // Karena AkunUbsc extends Authenticatable
-        return view('profile.edit', compact('akun'));
+        return route('profile.edit', compact('akun'));
     }
 }
