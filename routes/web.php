@@ -37,22 +37,6 @@ Route::get('/signup/verification-pending', [SignUpController::class, 'showVerifi
 
 // Route Homepage dengan Data dari Database
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
-
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
-
-
-    Route::get('/akun-member', function () {
-        return view('admin.akun-member.index');
-    })->name('akun-member');
-
-    Route::resource('akun-member', AkunMemberController::class);
-    Route::post('/akun-member/{id}/toggle-status', [AkunMemberController::class, 'toggleStatus'])->name('akun-member.toggle-status');
-    Route::put('/akun-member/{id}', [AkunMemberController::class, 'updateMembership'])->name('akun-member.updateMembership');
-    Route::post('/akun-member', [AkunMemberController::class, 'tambahMember'])->name('akun-member.tambahMember');
-});
 
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile');
@@ -78,6 +62,15 @@ Route::middleware(['auth:web'])->group(function () {
 Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/akun-member', function () {
+        return view('admin.akun-member.index');
+    })->name('akun-member');
+
+    Route::resource('akun-member', AkunMemberController::class);
+    Route::post('/akun-member/{id}/toggle-status', [AkunMemberController::class, 'toggleStatus'])->name('akun-member.toggle-status');
+    Route::put('/akun-member/{id}', [AkunMemberController::class, 'updateMembership'])->name('akun-member.updateMembership');
+    Route::post('/akun-member', [AkunMemberController::class, 'tambahMember'])->name('akun-member.tambahMember');
 
     // Verification Menu
     Route::prefix('verification')->name('verification.')->group(function () {

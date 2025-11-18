@@ -34,8 +34,8 @@
         <div class="mx-auto flex items-center justify-between px-12 py-2">
             
             <div class="flex items-center space-x-2">
-                <img src='{{ asset('images/LogoBMU.SVG') }}' alt="UB Sport Center Logo" class="h-10 sm:h-14 w-10 sm:w-16">
-                <img src='{{ asset('images/LogoUBSC.SVG') }}' alt="UB Sport Center Logo" class="h-10 sm:h-14 w-10 sm:w-16">
+                <img src='{{ asset('images/LogoBMU.svg') }}' alt="UB Sport Center Logo" class="h-10 sm:h-14 w-10 sm:w-16">
+                <img src='{{ asset('images/LogoUBSC.svg') }}' alt="UB Sport Center Logo" class="h-10 sm:h-14 w-10 sm:w-16">
             </div>
             
             <nav class="hidden md:flex space-x-6 lg:space-x-8">
