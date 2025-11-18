@@ -19,7 +19,7 @@
             <a href="#faq" class="hover:text-yellow-400">FAQ</a>
             <a href="#pusat-bantuan" class="hover:text-yellow-400">Pusat Bantuan</a>
         </nav>
-        <a href="#" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-5 rounded-lg">
+        <a href="{{ route('login') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-5 rounded-lg">
             Login
         </a>
     </header>
