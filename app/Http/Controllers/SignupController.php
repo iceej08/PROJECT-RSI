@@ -119,7 +119,7 @@ class SignupController extends Controller
             'kategori' => $signupData['kategori'], // true = warga_ub
             'foto_identitas' => $fotoIdentitasPath,
             'status_verifikasi' => 'pending',
-            'tgl_daftar' => null
+            'tgl_daftar' => now()->toDateString(),
         ]);
 
         Session::forget('signup_data');

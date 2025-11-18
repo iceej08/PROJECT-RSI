@@ -16,6 +16,7 @@
     </style>
 </head>
 <body class="bg-[#152259] min-h-screen">
+    @include('alert')
     
     {{-- LOGIC INITIATOR --}}
     @php
