@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SignupController;
 use App\Http\Controllers\Admin\AkunMemberController;
@@ -10,21 +11,23 @@ use App\Http\Controllers\Admin\VerificationController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\UbscAccountController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\FAQController;
+use App\Http\Controllers\Admin\PromosiController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('home');
     });
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login.post');
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-
+// Route Homepage dengan Data dari Database
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
+
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('dashboard');
+
 
     Route::get('/akun-member', function () {
         return view('admin.akun-member.index');
@@ -39,7 +42,7 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile');
     Route::get('/welcome', function () {
-        return view('welcome');
+        return view('welcomepage');
     })->name('welcome');
 
     Route::get('/profile', function () {
@@ -86,7 +89,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/approve/{id}', [VerificationController::class, 'approve'])->name('approve');
             Route::post('/reject/{id}', [VerificationController::class, 'reject'])->name('reject');
         });
-
+            Route::resource('faq', FAQController::class);
+            Route::resource('promosi', PromosiController::class);
+        });
         // UBSC Account Management (CRUD)
         Route::resource('ubsc-account', UbscAccountController::class)->names([
             'index' => 'ubsc_account.index',
@@ -97,5 +102,3 @@ Route::prefix('admin')->name('admin.')->group(function () {
             'destroy' => 'ubsc_account.destroy',
         ]);
     });
-});
-
