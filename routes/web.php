@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SignupController;
-use App\Http\Controllers\AkunMemberController;
+use App\Http\Controllers\Admin\AkunMemberController;
 use App\Http\Controllers\DaftarMemberController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
@@ -13,11 +13,8 @@ use App\Http\Controllers\ProfileController;
 
 
 Route::get('/', function () {
-    return view('homepage');
+    return view('home');
     });
-Route::get('/profile', function () {
-    return view('profile');
-});
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
@@ -40,19 +37,22 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
 });
 
 Route::middleware(['auth:web'])->group(function () {
-    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'showProfile'])->name('profile');
+    Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile');
     Route::get('/welcome', function () {
         return view('welcome');
     })->name('welcome');
 
-    Route::get('/profil', function () {
-        return view('pelanggan.profil');
-    })->name('profil');
+    Route::get('/profile', function () {
+        return view('profile');
+    })->name('profile');
 
     Route::get('/membership', [DaftarMemberController::class, 'showPilihanPaket'])->name('pelanggan.pilih-paket');
     Route::post('/membership/invoice', [DaftarMemberController::class, 'buatInvoice'])->name('pelanggan.buat-invoice');
     Route::get('/invoice/{id}', [DaftarMemberController::class, 'showInvoice'])->name('pelanggan.invoice.show');
-    Route::post('/invoice/{id}/upload-payment', [DaftarMemberController::class, 'unggahBuktiBayar'])->name('pelanggan.invoice.unggah-bukti');
+    // kalau user back ke halaman pilih paket
+    Route::post('/invoice/{id}/cancel', [DaftarMemberController::class, 'cancelInvoice'])
+     ->name('pelanggan.invoice.cancel');
+    Route::post('/invoice/{id}/unggah-bukti', [DaftarMemberController::class, 'unggahBuktiBayar'])->name('pelanggan.invoice.unggah-bukti');
 
 });
 
@@ -70,9 +70,9 @@ Route::get('/signup/verification-pending', [SignUpController::class, 'showVerifi
 Route::prefix('admin')->name('admin.')->group(function () {
 
     // Admin Auth Routes
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    // Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    // Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    // Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Protected Admin Routes
     Route::middleware(['auth:admin'])->group(function () {

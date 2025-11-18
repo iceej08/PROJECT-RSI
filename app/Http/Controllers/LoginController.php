@@ -2,9 +2,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\AkunUbsc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -46,6 +48,17 @@ class LoginController extends Controller
                 throw ValidationException::withMessages(['Akun Anda masih dalam proses verifikasi. Silakan tunggu hingga admin memverifikasi identitas Anda.']);
                 Auth::guard('web')->logout();
                 return redirect()->route('login');
+            }
+
+            //cek apakah user udah ada membership atau belum, kalau udah redirect ke profil
+            $memberAktif = DB::table('akun_membership')
+            ->where('id_akun', $user->id_akun)
+            ->where('status', 'aktif')
+            ->whereDate('tgl_berakhir', '>=', now())
+            ->first();
+
+            if ($memberAktif) {
+                return redirect()->route('profile'); // ganti dengan nama route profil kamu
             }
 
             return redirect()->route('welcome')

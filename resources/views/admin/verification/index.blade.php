@@ -4,6 +4,7 @@
 @section('page-title', 'Verification UBSC')
 
 @section('content')
+@include('alert')
 <div class="bg-white rounded-xl shadow-md">
     <div class="p-6 border-b flex items-center justify-between">
         <div>

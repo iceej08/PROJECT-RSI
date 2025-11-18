@@ -13,6 +13,7 @@
     </style>
 </head>
 <body class="bg-blue-100 min-h-screen p-4 md:p-8">
+    @include('alert')
     <div class="max-w-3xl mx-auto">
         <!-- Invoice Card -->
         <div class="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -39,49 +40,6 @@
 
             <!-- Invoice Items -->
             <div class="p-6">
-                <!-- Success Message -->
-                @if(session('success'))
-                    <div class="mb-4 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            {{ session('success') }}
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Error Message -->
-                @if(session('error'))
-                    <div class="mb-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                            </svg>
-                            {{ session('error') }}
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Validation Errors -->
-                @if($errors->any())
-                    <div class="mb-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded">
-                        <div class="flex">
-                            <svg class="w-5 h-5 mr-2 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                            </svg>
-                            <div>
-                                <p class="font-semibold mb-1">Terdapat kesalahan:</p>
-                                <ul class="list-disc list-inside text-sm">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
                 <div class="mb-6">
                     <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -260,20 +218,29 @@
                     </svg>
                     <h3 class="font-bold text-gray-800 mb-2">Pembayaran Terverifikasi!</h3>
                     <p class="text-sm text-gray-600 mb-4">Selamat! Membership Anda sudah aktif.</p>
-                    <a href="{{ route('profil') }}" class="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition">
+                    <a href="{{ route('profile') }}" class="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition">
                         Cek Profil Member Kamu!
                     </a>
                 </div>
                 @endif
 
+                
                 <!-- Download Button -->
                 <div class="flex justify-center space-x-4">
+                    <span>
                     <button onclick="window.print()" class="bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition flex items-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                         </svg>
                         Print Invoice
                     </button>
+                    </span>
+                    <form action="{{ route('pelanggan.invoice.cancel', $invoice->id_invoice) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="bg-red-500 border-2 border-gray-300 text-gray-600 px-6 py-3 rounded-lg hover:bg-red-700 transition flex items-center">
+                            Kembali & Pilih Paket Lain
+                        </button>
+                    </form>
                 </div>
             </div>
 

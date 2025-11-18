@@ -4,6 +4,7 @@
 @section('page-title', 'Tambah Akun UBSC')
 
 @section('content')
+@include('alert')
 <div class="max-w-2xl">
     <div class="bg-white rounded-xl shadow-md p-6">
         <form action="{{ route('admin.ubsc_account.store') }}" method="POST">
