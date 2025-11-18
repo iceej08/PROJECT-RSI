@@ -16,9 +16,13 @@ use App\Http\Controllers\Admin\FAQController;
 use App\Http\Controllers\Admin\PromosiController;
 use App\Http\Controllers\AdminController;
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home.index');
+// Dan route /home tetap ada:
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
