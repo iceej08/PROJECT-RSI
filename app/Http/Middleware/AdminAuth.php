@@ -16,26 +16,21 @@ class AdminAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Jika BUKAN admin yang login...
+
+        // Check if authenticated as admin
         if (!Auth::guard('admin')->check()) {
-            
-            // --- INI PERBAIKANNYA ---
-            // Arahkan ke rute 'admin.login', BUKAN 'login'
-            return redirect()->route('admin.login') 
+            return redirect()->route('login')
                 ->with('error', 'Anda harus login sebagai admin untuk mengakses halaman ini');
         }
-
-        // Jika user biasa mencoba mengakses...
+        
+        // Extra security: Make sure they're NOT logged in as regular user
+        // This prevents users from accessing admin panel even if they guess the URL
         if (Auth::guard('web')->check()) {
             Auth::guard('web')->logout();
-
-            // --- INI PERBAIKANNYA ---
-            // Arahkan ke rute 'admin.login', BUKAN 'login'
-            return redirect()->route('admin.login')
+            return redirect()->route('login')
                 ->with('error', 'Akses ditolak. Halaman ini hanya untuk admin.');
         }
         
-        // Jika lolos, lanjutkan
         return $next($request);
     }
 }

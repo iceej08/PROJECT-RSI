@@ -115,4 +115,18 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Mailer Configurations
+    |--------------------------------------------------------------------------
+    */
+    'mailers' => [
+        
+        // start mailtrap transport
+        'mailtrap-sdk' => [
+        'transport' => 'mailtrap-sdk'
+        ],
+        // end mailtrap transport
+        
+    ]
 ];

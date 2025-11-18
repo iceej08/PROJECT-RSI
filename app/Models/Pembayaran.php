@@ -12,23 +12,17 @@ class Pembayaran extends Model
     protected $table = 'pembayaran';
     protected $primaryKey = 'id_pembayaran';
 
-    /**
-     * PENTING!
-     * $fillable Anda sebelumnya kosong. 
-     * Salin ini untuk menggantikan $fillable Anda yang kosong.
-     */
     protected $fillable = [
         'id_invoice',
         'id_membership',
         'total_pembayaran',
         'metode',
         'bukti_pembayaran',
-        'status_pembayaran', // <-- Paling penting untuk fitur ini
+        'status_pembayaran',
         'jenis_paket',
         'tgl_pembayaran',
     ];
 
-    // Sisa file Anda (casts, relationships) sudah benar
     protected $casts = [
         'total_pembayaran' => 'decimal:2',
         'tgl_pembayaran' => 'datetime',

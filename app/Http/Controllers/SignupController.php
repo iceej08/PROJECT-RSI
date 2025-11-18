@@ -26,7 +26,6 @@ class SignupController extends Controller
             'nama_lengkap' => ['required', 'string', 'max:100'],
             'email' => ['required', 'string', 'email', 'max:100', 'unique:akun_ubsc,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'no_hp' => ['nullable', 'string', 'max:20'],
             'kategori' => ['required', 'in:umum,warga_ub'],
             'terms' => ['accepted'],
         ], [
@@ -47,8 +46,7 @@ class SignupController extends Controller
             Session::put('signup_data', [
                 'nama_lengkap' => $validated['nama_lengkap'],
                 'email' => $validated['email'],
-                'password' => $validated['password'], // Will be hashed later
-                'no_hp' => $validated['no_hp'] ?? null,
+                'password' => $validated['password'],
                 'kategori' => true, // true = warga_ub
             ]);
 
@@ -57,15 +55,15 @@ class SignupController extends Controller
                 ->with('info', 'Silakan upload foto identitas Anda untuk verifikasi sebagai Warga UB.');
         }
 
-        // warga umum
+        // umum
         $akun = AkunUbsc::create([
             'nama_lengkap' => $validated['nama_lengkap'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'no_hp' => $validated['no_hp'] ?? null,
             'kategori' => false, // false = umum
             'foto_identitas' => null, // No identity photo needed
-            'status_verifikasi' => null, // No verification needed for Umum
+            'status_verifikasi' => 'approved', // No verification needed for Umum
+
             'tgl_daftar' => now()->toDateString(),
         ]);
 
@@ -73,7 +71,6 @@ class SignupController extends Controller
             ->with('success', 'Akun berhasil dibuat! Silakan login untuk melanjutkan.');
     }
 
-    // upload page
     public function showUploadIdentitas()
     {
         // Check if signup data exists in session
@@ -89,14 +86,13 @@ class SignupController extends Controller
      */
     public function uploadIdentitas(Request $request)
     {
-        // Validate session data exists
+
         if (!Session::has('signup_data')) {
             return redirect()->route('signup')->with('error', 'Silakan isi form pendaftaran terlebih dahulu.');
         }
 
-        // Validate file upload
         $request->validate([
-            'foto_identitas' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'], // Max 2MB
+            'foto_identitas' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
         ], [
             'foto_identitas.required' => 'Foto identitas wajib diupload',
             'foto_identitas.image' => 'File harus berupa gambar',
@@ -104,10 +100,10 @@ class SignupController extends Controller
             'foto_identitas.max' => 'Ukuran file maksimal 2MB',
         ]);
 
-        // Get signup data from session
+
         $signupData = Session::get('signup_data');
 
-        // Handle file upload
+        // Store photo
         $fotoIdentitasPath = null;
         if ($request->hasFile('foto_identitas')) {
             $file = $request->file('foto_identitas');
@@ -115,19 +111,17 @@ class SignupController extends Controller
             $fotoIdentitasPath = $file->storeAs('identitas', $filename, 'public');
         }
 
-        // Create new user account with identity photo
+
         $akun = AkunUbsc::create([
             'nama_lengkap' => $signupData['nama_lengkap'],
             'email' => $signupData['email'],
             'password' => Hash::make($signupData['password']),
-            'no_hp' => $signupData['no_hp'],
             'kategori' => $signupData['kategori'], // true = warga_ub
             'foto_identitas' => $fotoIdentitasPath,
-            'status_verifikasi' => 'pending', // Warga UB needs admin verification
-            'tgl_daftar' => now()->toDateString(),
+            'status_verifikasi' => 'pending',
+            'tgl_daftar' => null
         ]);
 
-        // Clear session data
         Session::forget('signup_data');
 
         return redirect()->route('signup.verification-pending')
@@ -140,11 +134,6 @@ class SignupController extends Controller
     public function showVerificationPending()
     {
         $email = session('email');
-        
-        if (!$email) {
-            return redirect()->route('login');
-        }
-
         return view('verification-pending', compact('email'));
     }
     

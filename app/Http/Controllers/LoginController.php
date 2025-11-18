@@ -33,7 +33,7 @@ class LoginController extends Controller
             
             // Redirect to admin dashboard
             return redirect()->route('admin.dashboard')
-                ->with('success', 'Selamat datang, Admin ' . $admin->nama_lengkap . '!');
+                ->with('success', 'Selamat datang, ' . $admin->nama_lengkap . '!');
         }
 
         if (Auth::guard('web')->attempt($credentials, $request->filled('remember'))) {
@@ -43,16 +43,16 @@ class LoginController extends Controller
 
             // Check if user is Warga UB and not verified yet
             if ($user->kategori === true && $user->status_verifikasi === 'pending') {
+                throw ValidationException::withMessages(['Akun Anda masih dalam proses verifikasi. Silakan tunggu hingga admin memverifikasi identitas Anda.']);
                 Auth::guard('web')->logout();
-                return redirect()->route('login')
-                    ->with('error', 'Akun Anda masih dalam proses verifikasi. Silakan tunggu hingga admin memverifikasi identitas Anda.');
+                return redirect()->route('login');
             }
 
             return redirect()->route('welcome')
                 ->with('success', 'Selamat datang, ' . $user->nama_lengkap . '!');
     }
         throw ValidationException::withMessages([
-            'email' => ['The provided credentials do not match our records.'],
+            'email' => ['Email atau password kamu salah.'],
         ]);
 }
 
