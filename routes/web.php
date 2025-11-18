@@ -16,9 +16,13 @@ use App\Http\Controllers\Admin\FAQController;
 use App\Http\Controllers\Admin\PromosiController;
 use App\Http\Controllers\AdminController;
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home.index');
+// Dan route /home tetap ada:
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
@@ -37,22 +41,22 @@ Route::get('/signup/verification-pending', [SignUpController::class, 'showVerifi
 
 // Route Homepage dengan Data dari Database
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
 
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+// Signup Routes
+Route::get('/signup', [SignupController::class, 'showSignupForm'])->name('signup');
+Route::post('/signup', [SignupController::class, 'signUp'])->name('signup.post');
 
+// Identity upload routes (for Warga UB only)
+Route::get('/signup/upload-identity', [SignUpController::class, 'showUploadIdentitas'])->name('signup.upload-identitas');
+Route::post('/signup/upload-identity', [SignUpController::class, 'uploadIdentitas'])->name('signup.upload-identitas.post');
 
-    Route::get('/akun-member', function () {
-        return view('admin.akun-member.index');
-    })->name('akun-member');
+// Verification pending page (for Warga UB after upload)
+Route::get('/signup/verification-pending', [SignUpController::class, 'showVerificationPending'])->name('signup.verification-pending');
 
-    Route::resource('akun-member', AkunMemberController::class);
-    Route::post('/akun-member/{id}/toggle-status', [AkunMemberController::class, 'toggleStatus'])->name('akun-member.toggle-status');
-    Route::put('/akun-member/{id}', [AkunMemberController::class, 'updateMembership'])->name('akun-member.updateMembership');
-    Route::post('/akun-member', [AkunMemberController::class, 'tambahMember'])->name('akun-member.tambahMember');
-});
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+// ==================== USER ROUTES (AUTH REQUIRED) ====================
 
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile');
