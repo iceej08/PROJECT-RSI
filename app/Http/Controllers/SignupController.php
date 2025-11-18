@@ -63,6 +63,7 @@ class SignupController extends Controller
             'kategori' => false, // false = umum
             'foto_identitas' => null, // No identity photo needed
             'status_verifikasi' => 'approved', // No verification needed for Umum
+
             'tgl_daftar' => now()->toDateString(),
         ]);
 
@@ -85,6 +86,7 @@ class SignupController extends Controller
      */
     public function uploadIdentitas(Request $request)
     {
+
         if (!Session::has('signup_data')) {
             return redirect()->route('signup')->with('error', 'Silakan isi form pendaftaran terlebih dahulu.');
         }
@@ -98,6 +100,7 @@ class SignupController extends Controller
             'foto_identitas.max' => 'Ukuran file maksimal 2MB',
         ]);
 
+
         $signupData = Session::get('signup_data');
 
         // Store photo
@@ -108,7 +111,7 @@ class SignupController extends Controller
             $fotoIdentitasPath = $file->storeAs('identitas', $filename, 'public');
         }
 
-        // Create Warga UB account - pending verification
+
         $akun = AkunUbsc::create([
             'nama_lengkap' => $signupData['nama_lengkap'],
             'email' => $signupData['email'],
@@ -116,7 +119,7 @@ class SignupController extends Controller
             'kategori' => $signupData['kategori'], // true = warga_ub
             'foto_identitas' => $fotoIdentitasPath,
             'status_verifikasi' => 'pending',
-            'tgl_daftar' => null
+            'tgl_daftar' => now()->toDateString(),
         ]);
 
         Session::forget('signup_data');
@@ -131,7 +134,6 @@ class SignupController extends Controller
     public function showVerificationPending()
     {
         $email = session('email');
-
         return view('verification-pending', compact('email'));
     }
     

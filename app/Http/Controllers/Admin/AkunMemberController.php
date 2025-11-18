@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AkunUbsc;
@@ -21,8 +21,14 @@ class AkunMemberController extends Controller
     {
         $search = $request->get('search');
         
-        $members = AkunUbsc::with('memberships')
-            ->whereHas('memberships')
+        $members = AkunUbsc::with(['memberships' => function($query) {
+                $query->whereHas('pembayarans', function($q) {
+                    $q->where('status_pembayaran', 'verified');
+                })->latest();
+            }])
+            ->whereHas('memberships.pembayarans', function($query) {
+                $query->where('status_pembayaran', 'verified');
+            })
             ->when($search, function($query, $search) {
                 return $query->where('nama_lengkap', 'like', "%{$search}%")
                             ->orWhere('email', 'like', "%{$search}%")

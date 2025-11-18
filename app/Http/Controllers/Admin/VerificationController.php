@@ -49,7 +49,6 @@ class VerificationController extends Controller
             'status_verifikasi' => 'approved',
             'tgl_daftar' => $account->tgl_daftar ?? now()
         ]);
-
         Log::info('Account approved:', ['id' => $id, 'email' => $account->email]);
 
         // Send email notification

@@ -28,7 +28,6 @@ class DashboardController extends Controller
             'recentActivities'
         ));
     }
-
     private function getRecentActivities()
     {
         $activities = collect();
