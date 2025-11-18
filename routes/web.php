@@ -14,6 +14,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\FAQController;
 use App\Http\Controllers\Admin\PromosiController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('home');
@@ -42,7 +43,7 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
 });
 
 Route::middleware(['auth:web'])->group(function () {
-    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'showProfile'])->name('profile');
+    Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile');
     Route::get('/welcome', function () {
         return view('welcomepage');
     })->name('welcome');

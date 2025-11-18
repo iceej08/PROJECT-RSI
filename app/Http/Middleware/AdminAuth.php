@@ -16,6 +16,7 @@ class AdminAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
+
         // Check if authenticated as admin
         if (!Auth::guard('admin')->check()) {
             return redirect()->route('login')

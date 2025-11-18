@@ -14,7 +14,6 @@
 <body class="bg-gray-100">
     <div class="flex h-screen">
         <!-- Sidebar -->
-
         <aside class="w-64 bg-[#004a73] text-white flex-shrink-0">
             <div class="p-6">
                 <span class="flex justify-center mb-3">
@@ -119,7 +118,6 @@
                     </div>
                 </div>
             </header>
-
             <!-- Success/Error Messages -->
             @if(session('success'))
                 <div class="m-8 p-4 bg-green-50 border border-green-200 rounded-lg">
@@ -146,7 +144,6 @@
             </main>
         </div>
     </div>
-
     @stack('scripts')
 </body>
 </html>
