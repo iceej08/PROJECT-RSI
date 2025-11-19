@@ -11,7 +11,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\FAQController;
 use App\Http\Controllers\Admin\PromosiController;
-use App\Http\Controllers\VerifikasiPembayaranController;
+use App\Http\Controllers\Admin\VerifikasiPembayaranController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 // Dan route /home tetap ada:
@@ -84,10 +84,10 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
         'destroy' => 'ubsc_account.destroy',
     ]);
 
-        Route::get('/paymentverification', [VerifikasiPembayaranController::class, 'verifikasiPembayaran'])
-            ->name('verifikasi-pembayaran');
-
-        // Rute untuk MEMPROSES verifikasi
-        Route::patch('/paymentverification/{pembayaran}', [VerifikasiPembayaranController::class, 'prosesVerifikasi'])
-            ->name('proses-verifikasi');
+    Route::prefix('verifikasi-pembayaran')->name('verifikasi-pembayaran.')->group(function () {
+        Route::get('/', [VerifikasiPembayaranController::class, 'index'])->name('index');
+        Route::get('/bukti/{id}', [VerifikasiPembayaranController::class, 'viewBukti'])->name('bukti');
+        Route::post('/approve/{id}', [VerifikasiPembayaranController::class, 'approve'])->name('approve');
+        Route::post('/reject/{id}', [VerifikasiPembayaranController::class, 'reject'])->name('reject');
+    });
 });
