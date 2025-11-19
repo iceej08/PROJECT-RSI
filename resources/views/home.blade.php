@@ -5,9 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UB Sport Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Alkatra:wght@400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
 <body class="text-gray-800">
-
     <header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-10 py-4 bg-gray-500 text-white shadow-md">
         <div class="flex items-center space-x-3">
             <img src="{{ asset('images/logo.png') }}" alt="UB Logo" class="h-10">
@@ -24,7 +30,7 @@
         </a>
     </header>
 
-    <section id="home" class="relative bg-cover bg-center h-[650px]" style="background-image: url('{{ asset('images/bg.png') }}');">
+    <section id="home" class="relative bg-cover bg-center h-screen" style="background-image: url('{{ asset('images/bg.png') }}');">
         <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-start px-10">
             <h2 class="text-4xl md:text-5xl font-extrabold text-white">UNIVERSITAS BRAWIJAYA</h2>
             <h3 class="text-5xl md:text-6xl font-extrabold text-yellow-400 mt-2">SPORT CENTER</h3>

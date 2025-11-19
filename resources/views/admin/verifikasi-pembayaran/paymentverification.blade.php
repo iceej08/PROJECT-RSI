@@ -18,53 +18,89 @@
 <body class="bg-gray-100">
     <div class="flex h-screen" x-data="{ showModal: false, imageUrl: '' }">
         <!-- Sidebar (Ini sudah benar) -->
-        <aside class="w-64 bg-[#152259] text-white">
+        <aside class="w-1/8 bg-[#004a73] text-white shrink-0">
             <div class="p-6">
-                <h1 class="text-2xl font-bold">UB Sport Center</h1>
-                <p class="text-sm text-blue-200">Admin Panel</p>
+                <span class="flex justify-center mb-3">
+                    <img src="{{ asset('images/ubsc-logo.png') }}">
+                </span>
+                <h1 class="text-2xl text-center font-bold">UB Sport Center</h1>
+                <p class="text-sm text-center text-blue-200">Admin Panel</p>
             </div>
             
             <nav class="mt-6">
+
                 <a href="{{ route('admin.dashboard') }}" 
-                   class="flex items-center px-6 py-3 transition 
-                          {{ request()->routeIs('admin.dashboard') ? 'bg-[#509CDB] border-l-4 border-white' : 'hover:bg-[#509CDB]' }}">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                class="flex items-center px-6 py-3 {{ request()->routeIs('admin.dashboard') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
                     Dashboard
                 </a>
                 
-                <a href="#" class="flex items-center px-6 py-3 hover:bg-[#509CDB] transition">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    Verifikasi Users
-                </a>
 
-                <a href="{{ route('admin.verifikasi-pembayaran') }}" 
-                   class="flex items-center px-6 py-3 transition 
-                          {{ request()->routeIs('admin.verifikasi-pembayaran') ? 'bg-[#509CDB] border-l-4 border-white' : 'hover:bg-[#509CDB]' }}">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+                <a href="{{ route('admin.verification.index') }}" 
+                class="flex items-center px-6 py-3 {{ request()->routeIs('admin.verification.*') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Verifikasi UBSC
+                </a>
+                
+
+                <a href="{{ route('admin.ubsc_account.index') }}" 
+                class="flex items-center px-6 py-3 {{ request()->routeIs('admin.ubsc_account.*') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Akun UBSC
+                </a>
+                
+                <a href="{{ route('admin.akun-member.index') }}" 
+                class="flex items-center px-6 py-3 {{ request()->routeIs('admin.akun-member.*') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                    Akun Member
+                </a>
+                
+
+                <a href="{{ route('admin.verifikasi-pembayaran') }}" class="flex items-center px-6 py-3 hover:bg-[#003d5e] transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
                     Verifikasi Pembayaran
                 </a>
                 
-                <a href="#" class="flex items-center px-6 py-3 hover:bg-[#509CDB] transition">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                    Manage Users
-                </a>
-                
-                <a href="#" class="flex items-center px-6 py-3 hover:bg-[#509CDB] transition">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
-                    Membership
-                </a>
-                
-                <a href="#" class="flex items-center px-6 py-3 hover:bg-[#509CDB] transition">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <!-- FAQ Management -->
+                <a href="{{ route('admin.faq.index') }}" 
+                   class="flex items-center px-6 py-3 {{ request()->routeIs('admin.faq.*') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
+
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                     FAQ
                 </a>
+
+                <!-- Promosi Management -->
+                <a href="{{ route('admin.promosi.index') }}" 
+                   class="flex items-center px-6 py-3 {{ request()->routeIs('admin.promosi.*') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                    </svg>
+                    Promosi
+                </a>
+
             </nav>
             
+            <!-- Logout at bottom -->
             <div class="absolute bottom-0 w-64 p-6">
-                <form action="{{ route('admin.logout') }}" method="POST">
+
+                <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="flex items-center text-white hover:text-red-300 transition w-full">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
                         Logout
                     </button>
                 </form>
@@ -103,10 +139,6 @@
                                         
                                         <thead class="bg-gray-50">
                                             <tr>
-                                                <!-- 
-                                                  --- INI PERBAIKANNYA ---
-                                                  Mengganti "ID Transaksi" menjadi "ID Pembayaran"
-                                                -->
                                                 <th scope="col" class="px-6 py-3 text-left text-sm font-semibold text-gray-700">
                                                     ID Pembayaran
                                                 </th>
@@ -136,7 +168,7 @@
                                             <tr>
                                                 <!-- Datanya sudah benar, yaitu id_pembayaran -->
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $item->id_pembayaran }}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $item->membership->akunUbsc->nama_lengkap ?? 'User Dihapus' }}</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $item->membership->akun->nama_lengkap ?? 'User Dihapus' }}</td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                                     Rp {{ number_format($item->total_pembayaran, 0, ',', '.') }}
                                                 </td>

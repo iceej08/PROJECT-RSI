@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UB Sport Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alkatra:wght@400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
 <body class="text-gray-800">
 
@@ -21,14 +27,14 @@
     </nav>
     </header>
 
-    <section id="home" class="relative bg-cover bg-center h-[650px]" style="background-image: url('{{ asset('images/welcome.png') }}');">
+    <section id="home" class="relative bg-cover bg-center h-screen" style="background-image: url('{{ asset('images/welcome.png') }}'); background-position:top;">
         <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-start px-10">
             <h2 class="text-6xl md:text-7xl font-extrabold text-white">WELCOME</h2>
-            <h3 class="text-5xl md:text-6xl font-extrabold text-yellow-400 mt-2">(USER UBSC)</h3>
+            <h3 class="text-5xl md:text-6xl font-extrabold text-yellow-400 mt-2">{{ Auth::guard('web')->user()->nama_lengkap }}</h3>
             <p class="text-gray-200 mt-4 max-w-lg leading-relaxed">
                 Let's burn our colories with Gym & Fitness membership
             </p>
-            <a href="#" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-5 rounded-lg">
+            <a href="{{ route('pelanggan.pilih-paket') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold mt-2 py-2 px-5 rounded-lg">
             GET SPECIAL PRICE WITH MEMBERSHIP
         </a>
         </div>

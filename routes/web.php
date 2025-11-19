@@ -1,6 +1,4 @@
 <?php
-
-
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SignupController;
 use App\Http\Controllers\Admin\AkunMemberController;
@@ -8,26 +6,20 @@ use App\Http\Controllers\DaftarMemberController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\VerificationController;
-use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\UbscAccountController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\FAQController;
 use App\Http\Controllers\Admin\PromosiController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\VerifikasiPembayaranController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 // Dan route /home tetap ada:
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
 
 Route::get('/signup', [SignupController::class, 'showSignupForm'])->name('signup');
 Route::post('/signup', [SignupController::class, 'signUp'])->name('signup.post');
@@ -96,10 +88,10 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
         'destroy' => 'ubsc_account.destroy',
     ]);
 
-        Route::get('/paymentverification', [AdminController::class, 'verifikasiPembayaran'])
+        Route::get('/paymentverification', [VerifikasiPembayaranController::class, 'verifikasiPembayaran'])
             ->name('verifikasi-pembayaran');
 
         // Rute untuk MEMPROSES verifikasi
-        Route::patch('/paymentverification/{pembayaran}', [AdminController::class, 'prosesVerifikasi'])
+        Route::patch('/paymentverification/{pembayaran}', [VerifikasiPembayaranController::class, 'prosesVerifikasi'])
             ->name('proses-verifikasi');
 });

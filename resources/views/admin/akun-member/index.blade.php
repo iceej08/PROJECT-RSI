@@ -7,29 +7,25 @@
 @include('alert')
 <div class="bg-white rounded-xl shadow-md">
     <div class="p-6 border-b flex items-center justify-between">
-        <span>
+        <div>
             <button onclick="openAddModal()" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg flex items-center transition">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
                 Tambah Akun Member
             </button>
-        </span>
-            <div class="flex items-center gap-5">
-                <div class="relative">
-                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                    <form action="{{ route('admin.akun-member.index') }}" method="GET" class="grow">
-                        <input 
-                            type="text" 
-                            name="search"
-                            value="{{ $search ?? '' }}"
-                            placeholder="Cari Akun Member"
-                            class="w-full px-3 py-1 border-0 focus:outline-none">
-                    </form>
-                </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="relative">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text" 
+                       id="searchInput"
+                       placeholder="Cari akun UBSC..." 
+                       class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
             </div>
+        </div>
         </div>
 
         <!-- Add Member Modal -->
@@ -119,9 +115,7 @@
                         <select name="metode_pembayaran" required
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
                             <option value="transfer_bank">Transfer Bank</option>
-                            <option value="e_wallet">E-Wallet</option>
                             <option value="qris">QRIS</option>
-                            <option value="cash">Cash</option>
                         </select>
                     </div>
 
@@ -178,7 +172,7 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-sm">
-                                    @if($membership->status === true)
+                                    @if($membership)
                                         @if($membership->status && $membership->tgl_berakhir >= now())
                                             <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">Aktif</span>
                                         @elseif($membership->tgl_berakhir < now() && $membership->tgl_berakhir->copy()->addMonths(2) > now())
@@ -310,49 +304,58 @@
         </div>
 </div>
 @endsection
-    <script>
-        function openAddModal() {
-            document.getElementById('addModal').classList.remove('hidden');
-        }
+@push('scripts')
+<script>
+    function openAddModal() {
+        document.getElementById('addModal').classList.remove('hidden');
+    }
 
-        function closeAddModal() {
-            document.getElementById('addModal').classList.add('hidden');
-        }
+    function closeAddModal() {
+        document.getElementById('addModal').classList.add('hidden');
+    }
 
-        function updateTotalBayar() {
-            const select = document.getElementById('jenis_paket');
-            const selectedOption = select.options[select.selectedIndex];
-            const price = selectedOption.getAttribute('data-price');
-            
-            if (price) {
-                document.getElementById('total_bayar').value = price;
-                document.getElementById('total_bayar_display').value = 'Rp ' + parseInt(price).toLocaleString('id-ID');
-            } else {
-                document.getElementById('total_bayar').value = '0';
-                document.getElementById('total_bayar_display').value = 'Rp 0';
-            }
+    function updateTotalBayar() {
+        const select = document.getElementById('jenis_paket');
+        const selectedOption = select.options[select.selectedIndex];
+        const price = selectedOption.getAttribute('data-price');
+        
+        if (price) {
+            document.getElementById('total_bayar').value = price;
+            document.getElementById('total_bayar_display').value = 'Rp ' + parseInt(price).toLocaleString('id-ID');
+        } else {
+            document.getElementById('total_bayar').value = '0';
+            document.getElementById('total_bayar_display').value = 'Rp 0';
         }
+    }
 
-        function openEditModal(id) {
-            document.getElementById('editModal' + id).classList.remove('hidden');
-        }
+    function openEditModal(id) {
+        document.getElementById('editModal' + id).classList.remove('hidden');
+    }
 
-        function closeEditModal(id) {
-            document.getElementById('editModal' + id).classList.add('hidden');
-        }
+    function closeEditModal(id) {
+        document.getElementById('editModal' + id).classList.add('hidden');
+    }
 
-        function confirmDelete(id) {
-            if (confirm('Apakah Anda yakin ingin menghapus akun member ini? Semua data membership terkait juga akan dihapus.')) {
-                document.getElementById('delete-form-' + id).submit();
-            }
+    function confirmDelete(id) {
+        if (confirm('Apakah Anda yakin ingin menghapus akun member ini? Semua data membership terkait juga akan dihapus.')) {
+            document.getElementById('delete-form-' + id).submit();
         }
+    }
 
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            if (event.target.classList.contains('bg-opacity-50')) {
-                event.target.classList.add('hidden');
-            }
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        if (event.target.classList.contains('bg-opacity-50')) {
+            event.target.classList.add('hidden');
         }
-    </script>
-</body>
-</html>
+    }
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        const searchValue = this.value.toLowerCase();
+        const tableRows = document.querySelectorAll('tbody tr');
+        
+        tableRows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchValue) ? '' : 'none';
+        });
+    });
+</script>
+@endpush
