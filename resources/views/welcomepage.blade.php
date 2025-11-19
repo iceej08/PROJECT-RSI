@@ -3,43 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>UB Sport Center</title>
     <link href="https://fonts.googleapis.com/css2?family=Alkatra:wght@400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
         }
     </style>
 </head>
-<body class="text-gray-800">
+<body class="bg-[#152259] min-h-screen">
+@php
+    use Illuminate\Support\Facades\Auth;
+    $akun = Auth::user();
+    $membership = $akun->membership ?? null;
+    $is_active = $membership && now()->lte($membership->tgl_berakhir);
+@endphp
 
-        <header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-10 py-4 bg-white text-black shadow-md">
+<header class="bg-[#F4F6FF] shadow-md sticky top-0 z-10">
+    <div class="mx-auto flex items-center justify-between px-12 py-2">
+        
+        <div class="flex items-center space-x-2">
+            <img src='{{ asset('images/LogoBMU.svg') }}' alt="UB Sport Center Logo" class="h-10 sm:h-14 w-10 sm:w-16">
+            <img src='{{ asset('images/LogoUBSC.svg') }}' alt="UB Sport Center Logo" class="h-10 sm:h-14 w-10 sm:w-16">
+        </div>
+        
+        <nav class="hidden md:flex space-x-6 lg:space-x-8">
+            <a href="#" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Home</a>
+            <a href="#promosi" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Promosi</a>
+            <a href="#faq" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">FAQ</a>
+            <a href="#pusat-bantuan" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Pusat Bantuan</a>
+        </nav>
+
         <div class="flex items-center space-x-3">
-            <img src="{{ asset('images/logo.png') }}" alt="UB Logo" class="h-10">
-            <h1 class="text-xl font-semibold text-blue-700">UB SPORT CENTER</h1>
-        </div>
-        <nav class="flex space-x-8 text-sm font-medium">
-        <a href="#home" class="hover:text-yellow-400">Home</a>
-        <a href="#promosi" class="hover:text-yellow-400">Promosi</a>
-        <a href="#faq" class="hover:text-yellow-400">FAQ</a>
-        <a href="#pusat-bantuan" class="hover:text-yellow-400">Pusat Bantuan</a>
-    </nav>
-    </header>
+            <img src="{{ $akun->foto_identitas ? asset('storage/' . $akun->foto_identitas) : asset('images/profilBas.svg') }}" 
+                 alt="Profil User" class="h-12 w-12 rounded-full object-cover">
+            
+            <a href="{{ route('profile') }}" class="hidden sm:block cursor-pointer">
+    <p class="font-semibold text-sm text-gray-900 leading-tight">
+        {{ $akun->nama_lengkap ?? 'Nama Pengguna' }}
+    </p>
 
-    <section id="home" class="relative bg-cover bg-center h-screen" style="background-image: url('{{ asset('images/welcome.png') }}'); background-position:top;">
-        <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-start px-10">
-            <h2 class="text-6xl md:text-7xl font-extrabold text-white">WELCOME</h2>
-            <h3 class="text-5xl md:text-6xl font-extrabold text-yellow-400 mt-2">{{ Auth::guard('web')->user()->nama_lengkap }}</h3>
-            <p class="text-gray-200 mt-4 max-w-lg leading-relaxed">
-                Let's burn our colories with Gym & Fitness membership
-            </p>
-            <a href="{{ route('pelanggan.pilih-paket') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold mt-2 py-2 px-5 rounded-lg">
-            GET SPECIAL PRICE WITH MEMBERSHIP
-        </a>
-        </div>
+    <p class="text-xs text-gray-700 leading-tight">
+        @if ($is_active)
+            Member Aktif
+        @else
+            Non-Member
+        @endif
+    </p>
+</a>
 
-    </section>
+
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" title="Logout" class="p-2 rounded-full hover:bg-gray-100 transition duration-150">
+                    <i class="fas fa-sign-out-alt text-gray-700 h-5 w-5"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</header>
+<section id="home" class="relative bg-cover bg-center h-[650px]" style="background-image: url('{{ asset('images/welcome.png') }}');">
+        <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-start px-16 py-2">
+
+    <!-- WELCOME Italic -->
+    <h2 class="text-6xl md:text-8xl font-extrabold italic 
+        bg-gradient-to-t from-yellow-200 to-white
+        text-transparent bg-clip-text">
+        WELCOME,
+    </h2>
+
+    <!-- USER UBSC Italic + Gradasi Orange → Putih -->
+    <h3 class="text-4xl md:text-8xl font-extrabold mt-2 
+           bg-gradient-to-t from-yellow-400 to-yellow-200
+           text-transparent bg-clip-text uppercase wrap-break-word text-center md:text-left">
+    {{ $akun->nama_lengkap ?? 'USER UBSC' }}
+</h3>
+
+    <p class="text-lg text-gray-200 mt-6 mb-2 max-w-lg leading-relaxed">
+        Let's burn our calories with Gym & Fitness membership.
+    </p>
+
+    <a href="/membership" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-5 rounded-lg">
+        GET SPECIAL PRICE WITH MEMBERSHIP
+    </a>
+</div>
+</section>
 
    <section id="promosi" class="py-16 px-6 md:px-20 bg-white">
     <h2 class="text-center text-2xl font-bold text-gray-800 mb-10 tracking-wide">NEWS</h2>
@@ -144,11 +196,11 @@
             </a>
 
             <div class="flex justify-center space-x-6 mt-10">
-                <a href="https://instagram.com/chocolateflaws" target="_blank">
+                <a href="https://instagram.com/ubsportcenter" target="_blank">
                     <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" 
                          alt="Instagram" class="h-6 hover:scale-110 transition">
                 </a>
-                <a href="https://twitter.com/filkomUB" target="_blank">
+                <a href="https://twitter.com/ubsportcenter" target="_blank">
                     <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" 
                          alt="Twitter" class="h-6 hover:scale-110 transition">
                 </a>
@@ -159,23 +211,30 @@
             </div>
         </div>
     </section>
-    <footer class="bg-blue-900 text-white py-10 px-6 md:px-20">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div>
-                <h3 class="text-2xl font-bold">UB SPORT CENTER</h3>
-                <p class="text-sm text-gray-300 mt-2">© 2025 UB Sport Center. All rights reserved.</p>
-            </div>
-            <div class="flex space-x-6 text-sm">
-                <a href="#home" class="hover:underline">Home</a>
-                <a href="#promosi" class="hover:underline">Promosi</a>
-                <a href="#faq" class="hover:underline">FAQ</a>
-                <a href="#pusat-bantuan" class="hover:underline">Pusat Bantuan</a>
-            </div>
-            <div class="flex space-x-3">
-                <a href="#"><img src="{{ asset('images/logo.png') }}" class="h-10"></a>
-            </div>
-        </div>
-    </footer>
+    <footer class="bg-[#F4F6FF] text-[#152259] py-10 px-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-20">
 
+        <!-- KOLOM 1 — LOGO -->
+        <div>
+            <div class="flex items-start">
+    <a href="#" class="flex">
+        <img src="{{ asset('images/LogoBMU.svg') }}" class="h-32">
+        <img src="{{ asset('images/LogoUBSC.svg') }}" class="h-32">
+    </a>
+</div>
+    <p class="text-sm px-8 mt-4 ml-6">© 2025 UB Sport Center. All rights reserved.</p>
+        </div>
+
+        <!-- KOLOM 2 — NAVBAR (MENURUN) -->
+        <div class="flex flex-col space-y-2 text-sm">
+            <h4 class="font-bold text-lg mt-4 mb-2">Navigasi</h4>
+            <a href="/welcome#home" class="hover:underline">Home</a>
+            <a href="/welcome#promosi" class="hover:underline">Promosi</a>
+            <a href="/welcome#faq" class="hover:underline">FAQ</a>
+            <a href="/welcome#pusat-bantuan" class="hover:underline">Pusat Bantuan</a>
+        </div>
+
+    </div>
+</footer>
 </body>
 </html>

@@ -40,10 +40,6 @@ Route::middleware(['auth:web'])->group(function () {
         return view('welcomepage');
     })->name('welcome');
 
-    Route::get('/profile', function () {
-        return view('profile');
-    })->name('profile');
-
     Route::get('/membership', [DaftarMemberController::class, 'showPilihanPaket'])->name('pelanggan.pilih-paket');
     Route::post('/membership/invoice', [DaftarMemberController::class, 'buatInvoice'])->name('pelanggan.buat-invoice');
     Route::get('/invoice/{id}', [DaftarMemberController::class, 'showInvoice'])->name('pelanggan.invoice.show');
