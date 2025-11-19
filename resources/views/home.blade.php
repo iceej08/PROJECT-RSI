@@ -180,10 +180,10 @@
         <!-- KOLOM 2 — NAVBAR (MENURUN) -->
         <div class="flex flex-col space-y-2 text-sm">
             <h4 class="font-bold text-lg mt-4 mb-2">Navigasi</h4>
-            <a href="/welcome#home" class="hover:underline">Home</a>
-            <a href="/welcome#promosi" class="hover:underline">Promosi</a>
-            <a href="/welcome#faq" class="hover:underline">FAQ</a>
-            <a href="/welcome#pusat-bantuan" class="hover:underline">Pusat Bantuan</a>
+            <a href="#home" class="hover:underline">Home</a>
+            <a href="#promosi" class="hover:underline">Promosi</a>
+            <a href="#faq" class="hover:underline">FAQ</a>
+            <a href="#pusat-bantuan" class="hover:underline">Pusat Bantuan</a>
         </div>
 
     </div>
