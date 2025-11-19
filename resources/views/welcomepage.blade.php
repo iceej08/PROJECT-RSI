@@ -39,7 +39,7 @@
         </nav>
 
         <div class="flex items-center space-x-3">
-            <img src="{{ $akun->foto_identitas ? asset('storage/' . $akun->foto_identitas) : asset('images/profilBas.svg') }}" 
+            <img src="{{ $akun->foto_identitas ? asset('storage/' . $akun->foto_identitas) : asset('images/profile.svg') }}" 
                  alt="Profil User" class="h-12 w-12 rounded-full object-cover">
             
             <a href="{{ route('profile') }}" class="hidden sm:block cursor-pointer">
