@@ -53,7 +53,7 @@ class LoginController extends Controller
             //cek apakah user udah ada membership atau belum, kalau udah redirect ke profil
             $memberAktif = DB::table('akun_membership')
             ->where('id_akun', $user->id_akun)
-            ->where('status', 'aktif')
+            ->where('status', true)
             ->whereDate('tgl_berakhir', '>=', now())
             ->first();
 

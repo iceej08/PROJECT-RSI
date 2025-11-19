@@ -17,9 +17,6 @@ class SignupController extends Controller
         return view('signup');
     }
 
-    /**
-     * Handle signup request
-     */
     public function signUp(Request $request)
     {
         $validated = $request->validate([
@@ -40,9 +37,9 @@ class SignupController extends Controller
             'terms.accepted' => 'Anda harus menyetujui syarat dan ketentuan',
         ]);
 
-        // If user chooses "Warga UB", store data in session and redirect to upload page
+        // kalau memilih warga ub, data diletak di session utk 
+        // sementara (karena perlu upload identitas)
         if ($validated['kategori'] === 'warga_ub') {
-            // Store signup data in session temporarily
             Session::put('signup_data', [
                 'nama_lengkap' => $validated['nama_lengkap'],
                 'email' => $validated['email'],

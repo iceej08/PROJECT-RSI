@@ -233,7 +233,7 @@ class DaftarMemberController extends Controller
             $path = $file->storeAs('bukti_pembayaran', $filename, 'public');
 
             // Create or update payment record
-            $pembayaran = Pembayaran::updateOrCreate(
+            Pembayaran::updateOrCreate(
                 ['id_invoice' => $invoice->id_invoice],
                 [
                     'id_membership' => $invoice->transaksi->id_membership,

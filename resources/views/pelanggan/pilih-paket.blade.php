@@ -26,7 +26,7 @@
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-3" style="background-image: url({{ asset('images/bgPilihPaket.png') }});">
-    <div class="max-w-2xl max-h-full">
+    <div class="w-full max-w-2xl max-h-full">
         <!-- Card Container -->
         <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-8 md:p-12">
             <!-- Title -->

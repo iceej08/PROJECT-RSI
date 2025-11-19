@@ -14,7 +14,6 @@
     </style>
 </head>
 <body style="background-image: linear-gradient(#00263ab0, #00263ab0), url({{ asset('images/Sport-Center-UB.jpg') }})">
-
     <div class="min-h-screen flex items-center justify-center p-4">
         <div class="w-full max-w-4xl">
             <div class="flex justify-center">

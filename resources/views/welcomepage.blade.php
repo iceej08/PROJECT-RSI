@@ -20,7 +20,7 @@
     use Illuminate\Support\Facades\Auth;
     $akun = Auth::user();
     $membership = $akun->membership ?? null;
-    $is_active = $membership && now()->lte($membership->tgl_berakhir);
+    $is_active = $membership && now()->lte($membership->status);
 @endphp
 
 <header class="bg-[#F4F6FF] shadow-md sticky top-0 z-10">
@@ -55,8 +55,6 @@
         @endif
     </p>
 </a>
-
-
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" title="Logout" class="p-2 rounded-full hover:bg-gray-100 transition duration-150">
@@ -66,7 +64,7 @@
         </div>
     </div>
 </header>
-<section id="home" class="relative bg-cover bg-center h-[650px]" style="background-image: url('{{ asset('images/welcome.png') }}');">
+<section id="home" class="relative bg-cover bg-center h-screen" style="background-image: url('{{ asset('images/welcome.png') }}');">
         <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-start px-16 py-2">
 
     <!-- WELCOME Italic -->

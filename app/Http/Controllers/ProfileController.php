@@ -133,7 +133,7 @@ class ProfileController extends Controller
         Carbon::setLocale('id');
         $history = [];
 
-        foreach ($memberships as $m) {
+        foreach($memberships as $m) {
             $nama_paket = $m->nama_paket ?? 'Paket Premium'; 
             
             $tgl_mulai = $m->tgl_mulai;
