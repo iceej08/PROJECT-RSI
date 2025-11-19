@@ -36,7 +36,6 @@
                     </svg>
                     Dashboard
                 </a>
-                
 
                 <a href="{{ route('admin.verification.index') }}" 
                 class="flex items-center px-6 py-3 {{ request()->routeIs('admin.verification.*') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
