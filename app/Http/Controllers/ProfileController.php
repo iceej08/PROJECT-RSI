@@ -84,7 +84,7 @@ class ProfileController extends Controller
 
         // Parsing Tanggal Membership (sudah di-cast di Model)
         $tgl_mulai = $membership->tgl_mulai->startOfDay();
-        $tgl_berakhir = $membership->tgl_berakhir->endOfDay();
+        $tgl_berakhir = $membership->tgl_berakhir->startOfDay();
 
         $is_active = $today->between($tgl_mulai, $tgl_berakhir);
         $data['is_active'] = $is_active;
@@ -95,9 +95,9 @@ class ProfileController extends Controller
 
         if ($is_active) {
             // C. Perhitungan Sisa Waktu & Progress (Hanya jika aktif)
-            $total_durasi_hari = $tgl_mulai->diffInDays($tgl_berakhir) + 1; 
+            $total_durasi_hari = $tgl_mulai->diffInDays($tgl_berakhir); 
             $hari_berlalu = $tgl_mulai->diffInDays($today); 
-            $sisa_hari = $today->diffInDays($tgl_berakhir) + 1; 
+            $sisa_hari = $today->diffInDays($tgl_berakhir); 
             $progress = ($hari_berlalu / $total_durasi_hari) * 100;
 
             // Keterangan status
@@ -110,7 +110,7 @@ class ProfileController extends Controller
 
             // Update data
             $data['status_text'] = 'AKTIF' . $status_detail;
-            $data['sisa_waktu_text'] = $sisa_hari . ' Hari Tersisa';
+            $data['sisa_waktu_text'] = $sisa_hari . ' hari lagi';
             $data['progress_width'] = min(100, max(0, $progress));
 
         } else {

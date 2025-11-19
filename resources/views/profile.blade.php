@@ -191,23 +191,27 @@
 
                                 </div>
 
-                                <div class="">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <p class="text-sm font-medium text-green-500">Sisa waktu</p>
-                                        <div class="{{ $progress_color }} h-2.5 rounded-full transition-all duration-700" 
-                                            style="width: {{ $member_data['progress_width'] }}%;">
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="w-full bg-green-200 rounded-full h-2.5">
-                                        <div class="{{ $progress_color }} h-2.5 rounded-full transition-all duration-700" style="width: {{ $member_data['progress_width'] }}%;"></div>
-                                    </div>
-                                    
-                                        <a href="#" class="mt-4 block w-full text-center bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-sm font-medium transition duration-150 shadow-md">
-                                            Perpanjang Membership
-                                        </a>
-                                </div>
-                            </div>
+                        <div class="mt-4">
+                    <div class="flex justify-between items-center mb-1">
+                        <p class="text-gray-600 font-medium">Sisa waktu</p>
+
+                        <p class="text-green-600 font-bold">
+                            {{ $member_data['sisa_waktu_text'] }}
+                        </p>
+                    </div>
+
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="{{ $progress_color }} h-2.5 rounded-full transition-all duration-700"
+                            style="width: {{ round($member_data['progress_width']) }}%;">
+                        </div>
+                    </div>
+
+                    <a href="/membership"
+                    class="mt-5 block w-full text-center bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold shadow-md">
+                    PERPANJANG MEMBERSHIP
+                    </a>
+                </div>
+
                         @else
                         {{-- BLOK NON-MEMBER --}}
                         <div x-show="detailOpen" x-transition.duration.500ms class="right-panel lg:w-1/3 rounded-xl flex flex-col gap-4 text-center justify-center items-center">
