@@ -14,9 +14,6 @@ use Carbon\Carbon;
 
 class AkunMemberController extends Controller
 {
-    /**
-     * Display member accounts list
-     */
     public function index(Request $request)
     {
         $search = $request->get('search');
@@ -133,7 +130,7 @@ class AkunMemberController extends Controller
         }
     }
     
-    public function updateMembership(Request $request, $membershipId)
+    public function update(Request $request, $membershipId)
     {
         $request->validate([
             'tgl_mulai' => 'required|date',
