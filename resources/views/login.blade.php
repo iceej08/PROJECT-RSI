@@ -13,7 +13,6 @@
         }
     </style>
 </head>
-<body>
 <body style="background-image: linear-gradient(#00263ab0, #00263ab0), url({{ asset('images/Sport-Center-UB.jpg') }})">
     <div class="min-h-screen flex items-center justify-center p-4">
         <!-- Login Card -->
@@ -24,8 +23,8 @@
                         <h1 class="text-3xl text-center font-bold text-[#004a73] mb-8 italic">
                             Hello there! Ready to hit it?
                         </h1>
-
-                        @if(session('success'))
+                        @include('alert')
+                        {{-- @if(session('success'))
                             <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
                                 {{ session('success') }}
                             </div>
@@ -39,7 +38,7 @@
                                     @endforeach
                                 </ul>
                             </div>
-                        @endif
+                        @endif --}}
 
                         <form action="{{ route('login.post') }}" method="POST" class="space-y-6">
                             @csrf

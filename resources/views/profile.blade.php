@@ -30,44 +30,50 @@
         $tgl_daftar = isset($akun->created_at) ? \Carbon\Carbon::parse($akun->created_at)->translatedFormat('d F Y') : '-';
     @endphp
     <!-- NAVBAR START -->
-    <header class="bg-[#F4F6FF] shadow-md sticky top-0 z-10">
-        <div class="mx-auto flex items-center justify-between px-12 py-2">
-            
-            <div class="flex items-center space-x-2">
-                <img src='{{ asset('images/LogoBMU.SVG') }}' alt="UB Sport Center Logo" class="h-10 sm:h-14 w-10 sm:w-16">
-                <img src='{{ asset('images/LogoUBSC.SVG') }}' alt="UB Sport Center Logo" class="h-10 sm:h-14 w-10 sm:w-16">
-            </div>
-            
-            <nav class="hidden md:flex space-x-6 lg:space-x-8">
-                <a href="/homepage" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Home</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">Facilities</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">Recent News</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">Gallery</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">FAQ</a>
-            </nav>
-    
-            <div class="flex items-center space-x-3">
-                <img src='{{ asset('images/profilBas.svg') }}' alt="Profil User" class="h-12 w-12 rounded-full object-cover">
-                <div class="hidden sm:block">
-                    <p class="font-semibold text-sm text-gray-900 leading-tight">{{ $akun->nama_lengkap ?? 'Nama Pengguna' }}</p>
-                    <p class="text-xs text-gray-700 leading-tight">
-                        @if ($is_active)
-                            Premium Member
-                        @else
-                            Non-Member
-                        @endif
-                    </p>
-                </div>
 
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" title="Logout" class="p-2 rounded-full hover:bg-gray-100 transition duration-150">
-                        <i class="fas fa-sign-out-alt text-gray-700 h-5 w-5"></i>
-                    </button>
-                </form>
-            </div>
+<header class="bg-[#F4F6FF] shadow-md sticky top-0 z-10">
+    <div class="mx-auto flex items-center justify-between px-12 py-2">
+        
+        <div class="flex items-center space-x-2">
+            <img src='{{ asset('images/LogoBMU.svg') }}' alt="UB Sport Center Logo" class="h-10 sm:h-14 w-10 sm:w-16">
+            <img src='{{ asset('images/LogoUBSC.svg') }}' alt="UB Sport Center Logo" class="h-10 sm:h-14 w-10 sm:w-16">
         </div>
-    </header>
+        
+        <nav class="hidden md:flex space-x-6 lg:space-x-8">
+            <a href="/welcome" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Home</a>
+            <a href="/welcome#promosi" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Promosi</a>
+            <a href="/welcome#faq" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">FAQ</a>
+            <a href="/welcome#pusat-bantuan" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Pusat Bantuan</a>
+        </nav>
+
+        <div class="flex items-center space-x-3">
+            <img src="{{ $akun->foto_identitas ? asset('storage/' . $akun->foto_identitas) : asset('images/profile.svg') }}" 
+                 alt="Profil User" class="h-12 w-12 rounded-full object-cover">
+            
+            <a href="{{ route('profile') }}" class="hidden sm:block cursor-pointer">
+    <p class="font-semibold text-sm text-gray-900 leading-tight">
+        {{ $akun->nama_lengkap ?? 'Nama Pengguna' }}
+    </p>
+
+    <p class="text-xs text-gray-700 leading-tight">
+        @if ($is_active)
+            Member Aktif
+        @else
+            Non-Member
+        @endif
+    </p>
+</a>
+
+
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" title="Logout" class="p-2 rounded-full hover:bg-gray-100 transition duration-150">
+                    <i class="fas fa-sign-out-alt text-gray-700 h-5 w-5"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</header>
     <!-- NAVBAR END -->
 
     <!-- PROFILE TITLE START -->
@@ -97,7 +103,7 @@
             <!-- PROFILE TITLE END -->
 
             <!-- CARD PROFILE START -->
-            <div x-data="{ detailOpen: true }" class="flex flex-col gap-6 px-12">
+            <div x-data="{ detailOpen: false }" class="flex flex-col gap-6 px-12">
                 
                 <section class="profile-container p-2 md:p-8 bg-white rounded-xl shadow-lg border border-gray-50">
         
@@ -120,7 +126,7 @@
                             <div class="flex flex-col sm:flex-row justify-between items-start pb-8">
                                 <div class="flex items-start">
                                     <img 
-                                        src="{{ $akun->foto_identitas ? asset('storage/' . $akun->foto_identitas) : asset('images/profilBas.svg') }}" 
+                                        src="{{ $akun->foto_identitas ? asset('storage/' . $akun->foto_identitas) : asset('images/profile.svg') }}" 
                                         alt="{{ $akun->nama_lengkap ?? 'Profil User' }}" 
                                         class="h-24 w-24 rounded-full mr-5 object-cover"
                                     >
@@ -178,30 +184,32 @@
                                     
                                     <span class="inline-block px-4 py-1.5 bg-green-600 text-white text-xs font-bold rounded-full uppercase tracking-wider mb-2shadow-sm mb-2">
                                         AKTIF
-                                    </span>
-                                    <p class="text-sm text-gray-800">Mulai: 15 November 2025</p>
-                                    <p class="text-sm text-gray-800">Berakhir: 15 Desember 2025</p>
+                                    </span><p class="text-sm text-gray-800">Mulai: {{ $member_data['tgl_mulai_formatted'] }}</p>
+                                            <p class="text-sm text-gray-800">Berakhir: {{ $member_data['tgl_berakhir_formatted'] }}</p>
+
                                 </div>
 
-                                <div class="">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <p class="text-sm font-medium text-green-500">Sisa waktu</p>
-                                        <p class="text-base font-bold text-green-800">
-                                            30 hari lagi
-                                        </p>
-                                    </div>
-                                    
-                                    <div class="w-full bg-green-200 rounded-full h-2.5">
-                                        <div class="{{ $progress_color }} h-2.5 rounded-full transition-all duration-700" style="width: {{ $member_data['progress_width'] }}%;"></div>
-                                    </div>
-                                    
-                                    @if (!$is_active)
-                                        <a href="#" class="mt-4 block w-full text-center bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-sm font-medium transition duration-150 shadow-md">
-                                            Perpanjang Membership
-                                        </a>
-                                    @endif
-                                </div>
-                            </div>
+                        <div class="mt-4">
+                    <div class="flex justify-between items-center mb-1">
+                        <p class="text-gray-600 font-medium">Sisa waktu</p>
+
+                        <p class="text-green-600 font-bold">
+                            {{ $member_data['sisa_waktu_text'] }}
+                        </p>
+                    </div>
+
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="{{ $progress_color }} h-2.5 rounded-full transition-all duration-700"
+                            style="width: {{ round($member_data['progress_width']) }}%;">
+                        </div>
+                    </div>
+
+                    <a href="/membership"
+                    class="mt-5 block w-full text-center bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold shadow-md">
+                    PERPANJANG MEMBERSHIP
+                    </a>
+                </div>
+
                         @else
                         {{-- BLOK NON-MEMBER --}}
                         <div x-show="detailOpen" x-transition.duration.500ms class="right-panel lg:w-1/3 rounded-xl flex flex-col gap-4 text-center justify-center items-center">
@@ -213,7 +221,7 @@
                                        NON-AKTIF
                                     </span>
                                 <p class="text-sm text-gray-600 mb-2">Anda belum memiliki status Premium Membership. Dapatkan akses eksklusif sekarang!</p>
-                                <a href="#" class="w-full text-center bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-sm font-medium transition duration-150 shadow-md">
+                                <a href="/membership" class="w-full text-center bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-sm font-medium transition duration-150 shadow-md">
                                     Daftar Membership
                                 </a>
                             </div>
@@ -257,19 +265,19 @@
                         <h2 class="text-xl font-semibold mb-4 border-b pb-3 border-gray-100">Keuntungan Member ✨</h2>
                         <ul class="space-y-3">
                             <li class="flex items-start">
-                                <img src='images/check.svg' alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
+                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
                                 <p>Akses unlimited konten premium dan fasilitas utama.</p>
                             </li>
                             <li class="flex items-start">
-                                <img src='images/check.svg' alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
+                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
                                 <p>Diskon 20% untuk semua produk dan penyewaan lapangan.</p>
                             </li>
                             <li class="flex items-start">
-                                <img src='images/check.svg' alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
+                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
                                 <p>Support prioritas 24/7 melalui live chat.</p>
                             </li>
                             <li class="flex items-start">
-                                <img src='images/check.svg' alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
+                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
                                 <p>Akses early access untuk fitur dan event baru.</p>
                             </li>
                         </ul>

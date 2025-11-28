@@ -3,16 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-=======
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login UBSC</title>
+    <title>Sign Up UBSC</title>
     <link href="https://fonts.googleapis.com/css2?family=Alkatra:wght@400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -30,7 +22,8 @@
                         <h1 class="text-4xl text-center font-bold text-[#004a73] mb-8 italic">
                             Let's Burn Together!
                         </h1>
-                        @if($errors->any())
+                        @include('alert')
+                        {{-- @if($errors->any())
                             <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl">
                                 <ul class="text-red-600 text-sm space-y-1">
                                     @foreach($errors->all() as $error)
@@ -38,7 +31,7 @@
                                     @endforeach
                                 </ul>
                             </div>
-                        @endif
+                        @endif --}}
                         <form action="{{ route('signup.post') }}" method="POST" class="mb-0">
                             @csrf
                             {{-- nama --}}
