@@ -43,7 +43,7 @@
         </div>
     </div>
 </header>
-    <section id="home" class="relative bg-cover bg-center h-[650px]" style="background-image: url('{{ asset('images/bg.png') }}');">
+    <section id="home" class="relative bg-cover bg-center h-screen" style="background-image: url('{{ asset('images/bg.png') }}');">
         <div class="absolute inset-0 flex flex-col justify-center items-start px-16">
             <h2 class="text-6xl md:text-6xl font-extrabold 
         bg-gradient-to-t from-yellow-200 to-white
@@ -147,7 +147,7 @@
             </a>
 
             <div class="flex justify-center space-x-6 mt-10">
-                a href="https://instagram.com/ubsportcenter" target="_blank">
+                <a href="https://instagram.com/ubsportcenter" target="_blank">
                     <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" 
                          alt="Instagram" class="h-6 hover:scale-110 transition">
                 </a>
