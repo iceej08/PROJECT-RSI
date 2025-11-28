@@ -11,20 +11,26 @@
         
         <div class="mb-6">
             <label class="block text-gray-700 font-semibold mb-2">Pertanyaan</label>
-            <textarea name="Pertanyaan" rows="3" 
-                      class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('Pertanyaan') border-red-500 @enderror" 
-                      required>{{ old('Pertanyaan') }}</textarea>
-            @error('Pertanyaan')
+            {{-- PERBAIKAN: name="pertanyaan" (sebelumnya Pertanyaan) --}}
+            <textarea name="pertanyaan" rows="3" 
+                      class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('pertanyaan') border-red-500 @enderror" 
+                      required>{{ old('pertanyaan') }}</textarea>
+            
+            {{-- Pastikan error menangkap 'pertanyaan' (kecil) --}}
+            @error('pertanyaan')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
         </div>
 
         <div class="mb-6">
             <label class="block text-gray-700 font-semibold mb-2">Jawaban</label>
-            <textarea name="Jawaban" rows="5" 
-                      class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('Jawaban') border-red-500 @enderror" 
-                      required>{{ old('Jawaban') }}</textarea>
-            @error('Jawaban')
+            {{-- PERBAIKAN: name="jawaban" (sebelumnya Jawaban) --}}
+            <textarea name="jawaban" rows="5" 
+                      class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('jawaban') border-red-500 @enderror" 
+                      required>{{ old('jawaban') }}</textarea>
+            
+            {{-- Pastikan error menangkap 'jawaban' (kecil) --}}
+            @error('jawaban')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
         </div>

@@ -156,8 +156,8 @@
     <div class="max-w-2xl mx-auto space-y-4">
         @forelse($faqs as $faq)
         <details class="bg-white shadow-md rounded-lg p-4">
-            <summary class="font-semibold text-gray-800 cursor-pointer">{{ $faq->Pertanyaan }}</summary>
-            <p class="mt-2 text-gray-600">{{ $faq->Jawaban }}</p>
+            <summary class="font-semibold text-gray-800 cursor-pointer">{{ $faq->pertanyaan }}</summary>
+            <p class="mt-2 text-gray-600">{{ $faq->jawaban }}</p>
         </details>
         @empty
         <p class="text-center text-gray-500">Belum ada FAQ tersedia.</p>
