@@ -43,7 +43,7 @@
         </div>
     </div>
 </header>
-    <section id="home" class="relative bg-cover bg-center h-[650px]" style="background-image: url('{{ asset('images/bg.png') }}');">
+    <section id="home" class="relative bg-cover bg-center h-screen" style="background-image: url('{{ asset('images/bg.png') }}');">
         <div class="absolute inset-0 flex flex-col justify-center items-start px-16">
             <h2 class="text-6xl md:text-6xl font-extrabold 
         bg-gradient-to-t from-yellow-200 to-white

@@ -60,7 +60,6 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     })->name('akun-member');
 
     Route::resource('akun-member', AkunMemberController::class);
-    Route::post('/akun-member/{id}/toggle-status', [AkunMemberController::class, 'toggleStatus'])->name('akun-member.toggle-status');
     Route::put('/akun-member/{id}', [AkunMemberController::class, 'update'])->name('akun-member.update');
     Route::post('/akun-member', [AkunMemberController::class, 'tambahMember'])->name('akun-member.tambahMember');
 

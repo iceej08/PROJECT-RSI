@@ -21,6 +21,6 @@ class FAQ extends Model
     // Relasi ke Admin (jika ada tabel users/admins)
     public function admin()
     {
-        return $this->belongsTo(User::class, 'Id_admin');
+        return $this->belongsTo(Admin::class, 'Id_admin');
     }
 }
