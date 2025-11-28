@@ -182,6 +182,26 @@
                                         @endif
                                     @endif
                                 </td>
+    <td class="px-6 py-4 text-sm">
+    @php
+        $isActive = $membership->isActive();
+        $isExpired = $membership->tgl_berakhir < now();
+    @endphp
+    
+    @if($isActive)
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+            ✓ Aktif
+        </span>
+    @elseif($isExpired)
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+            ✗ Kedaluwarsa
+        </span>
+    @else
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">
+            ⊗ Non-aktif
+        </span>
+    @endif
+</td>
                                 <td class="px-6 py-4 text-sm">
                                     <button 
                                         onclick="openEditModal({{ $member->id_akun }})" 

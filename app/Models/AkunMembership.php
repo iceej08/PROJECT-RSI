@@ -47,14 +47,14 @@ class AkunMembership extends Model
         return $this->hasMany(Pembayaran::class, 'id_membership');
     }
 
-    public function isActive(): bool
-    {
-        $today = Carbon::now()->startOfDay();
+   public function isActive(): bool
+{
+    $today = Carbon::now()->startOfDay();
 
-        return $this->status 
-            && $this->tgl_berakhir instanceof Carbon
-            && $this->tgl_berakhir->endOfDay()->greaterThanOrEqualTo($today);
-    }
+    return $this->status 
+        && $this->tgl_berakhir instanceof Carbon
+        && $this->tgl_berakhir->endOfDay()->greaterThanOrEqualTo($today);
+}
 
     public function daysRemaining(): int
     {

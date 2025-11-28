@@ -1,275 +1,264 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Verifikasi Pembayaran</title>
-    <link href="https://fonts.googleapis.com/css2?family=Alkatra:wght@400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
-        [x-cloak] { display: none !important; }
-    </style>
-</head>
-<body class="bg-gray-100">
-    <div class="flex h-screen" x-data="{ showModal: false, imageUrl: '' }">
-        <!-- Sidebar (Ini sudah benar) -->
-        <aside class="w-1/8 bg-[#004a73] text-white shrink-0">
-            <div class="p-6">
-                <span class="flex justify-center mb-3">
-                    <img src="{{ asset('images/ubsc-logo.png') }}">
-                </span>
-                <h1 class="text-2xl text-center font-bold">UB Sport Center</h1>
-                <p class="text-sm text-center text-blue-200">Admin Panel</p>
-            </div>
-            
-            <nav class="mt-6">
+@extends('layouts.admin')
 
-                <a href="{{ route('admin.dashboard') }}" 
-                class="flex items-center px-6 py-3 {{ request()->routeIs('admin.dashboard') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                    Dashboard
-                </a>
+@section('title', 'Verifikasi Pembayaran')
+@section('page-title', 'Verifikasi Pembayaran')
 
-                <a href="{{ route('admin.verification.index') }}" 
-                class="flex items-center px-6 py-3 {{ request()->routeIs('admin.verification.*') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Verifikasi UBSC
-                </a>
-                
-
-                <a href="{{ route('admin.ubsc_account.index') }}" 
-                class="flex items-center px-6 py-3 {{ request()->routeIs('admin.ubsc_account.*') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    Akun UBSC
-                </a>
-                
-                <a href="{{ route('admin.akun-member.index') }}" 
-                class="flex items-center px-6 py-3 {{ request()->routeIs('admin.akun-member.*') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                    </svg>
-                    Akun Member
-                </a>
-                
-
-                <a href="{{ route('admin.verifikasi-pembayaran.index') }}" class="flex items-center px-6 py-3 hover:bg-[#003d5e] transition">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                    </svg>
-                    Verifikasi Pembayaran
-                </a>
-                
-                <!-- FAQ Management -->
-                <a href="{{ route('admin.faq.index') }}" 
-                   class="flex items-center px-6 py-3 {{ request()->routeIs('admin.faq.*') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
-
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    FAQ
-                </a>
-
-                <!-- Promosi Management -->
-                <a href="{{ route('admin.promosi.index') }}" 
-                   class="flex items-center px-6 py-3 {{ request()->routeIs('admin.promosi.*') ? 'bg-[#003d5e] border-l-4 border-white' : 'hover:bg-[#003d5e]' }} transition">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-                    </svg>
-                    Promosi
-                </a>
-
-            </nav>
-            
-            <!-- Logout at bottom -->
-            <div class="absolute bottom-0 w-64 p-6">
-
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="flex items-center text-white hover:text-red-300 transition w-full">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        Logout
-                    </button>
-                </form>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <div class="flex-1 overflow-y-auto">
-            <header class="bg-white shadow-md">
-                <div class="flex items-center justify-between px-8 py-4">
-                    <h2 class="text-2xl font-bold text-gray-800">Verifikasi Pembayaran</h2>
-                    <div class="flex items-center space-x-4">
-                        <span class="text-gray-600">Admin: <span class="font-semibold text-[#004a73]">{{ Auth::guard('admin')->user()->nama_lengkap }}</span></span>
-                        <div class="w-10 h-10 bg-[#004a73] rounded-full flex items-center justify-center text-white font-bold">
-                            {{ strtoupper(substr(Auth::guard('admin')->user()->nama_lengkap, 0, 1)) }}
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            @include('alert')
-
-            <main class="p-8">
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Daftar Transaksi Pembayaran</h3>
-                    
-                    <div class="flex flex-col">
-                        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                                    <table class="min-w-full divide-y divide-gray-200">
-                                        
-                                        <thead class="bg-gray-50">
-                                            <tr>
-                                                <th scope="col" class="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                                                    ID Pembayaran
-                                                </th>
-                                                <th scope="col" class="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                                                    Nama
-                                                </th>
-                                                <th scope="col" class="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                                                    Total
-                                                </th>
-                                                <th scope="col" class="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                                                    Metode
-                                                </th>
-                                                <th scope="col" class="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                                                    Status
-                                                </th>
-                                                <th scope="col" class="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                                                    Bukti Pembayaran
-                                                </th>
-                                                <th scope="col" class="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                                                    Action
-                                                </th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody class="bg-white divide-y divide-gray-200">
-                                            @forelse ($pembayarans as $item)
-                                            <tr>
-                                                <!-- Datanya sudah benar, yaitu id_pembayaran -->
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $item->id_pembayaran }}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $item->membership->akun->nama_lengkap ?? 'User Dihapus' }}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                                    Rp {{ number_format($item->total_pembayaran, 0, ',', '.') }}
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                                    {{ ucfirst($item->metode) }}
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                                    @if($item->status_pembayaran == 'pending')
-                                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-                                                    @elseif($item->status_pembayaran == 'verified')
-                                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Berhasil</span>
-                                                    @elseif($item->status_pembayaran == 'rejected')
-                                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Gagal</span>
-                                                    @endif
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                                    <button 
-                                                        type="button" 
-                                                        class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium"
-                                                        @click="showModal = true; imageUrl = '{{ asset('storage/' . $item->bukti_pembayaran) }}'">
-                                                        Lihat Bukti
-                                                    </button>
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                                                    @if($item->status_pembayaran == 'pending')
-                                                        <form action="{{ route('admin.verifikasi-pembayaran.approve', $item->id_pembayaran) }}" method="POST" class="inline">
-                                                            @csrf
-                                                            {{-- @method('PATCH') --}}
-                                                            <input type="hidden" name="status" value="verified">
-                                                            <button type="submit" class="px-3 py-1 bg-green-600 text-white text-xs font-medium rounded-md hover:bg-green-700">Accept</button>
-                                                        </form>
-                                                        
-                                                        <form action="{{ route('admin.verifikasi-pembayaran.reject', $item->id_pembayaran) }}" method="POST" class="inline">
-                                                            @csrf
-                                                            {{-- @method('PATCH') --}}
-                                                            <input type="hidden" name="status" value="rejected">
-                                                            <button type="submit" class="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded-md hover:bg-red-700">Reject</button>
-                                                        </form>
-                                                    @else
-                                                        <span>-</span>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            @empty
-                                            <tr>
-                                                <td colspan="7" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">Tidak ada data transaksi.</td>
-                                            </tr>
-                                            @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
+@section('content')
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Pembayaran</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Metode</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bukti Pembayaran</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @forelse($pembayarans as $pembayaran)
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {{ $pembayaran->id_pembayaran }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {{ $pembayaran->invoice->transaksi->membership->akun->nama_lengkap }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        Rp {{ number_format($pembayaran->total_pembayaran, 0, ',', '.') }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {{ ucwords(str_replace('_', ' ', $pembayaran->metode)) }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        @if($pembayaran->status_pembayaran === 'pending')
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                Pending
+                            </span>
+                        @elseif($pembayaran->status_pembayaran === 'verified')
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                Berhasil
+                            </span>
+                        @else
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                Gagal
+                            </span>
+                        @endif
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        @if($pembayaran->bukti_pembayaran)
+                            <button onclick="viewBukti({{ $pembayaran->id_pembayaran }})" 
+                                    class="text-blue-600 hover:text-blue-900 font-medium">
+                                Lihat Bukti
+                            </button>
+                        @else
+                            <span class="text-gray-400">Tidak ada</span>
+                        @endif
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        @if($pembayaran->status_pembayaran === 'pending')
+                            <div class="flex space-x-2">
+                                <form action="{{ route('admin.verifikasi-pembayaran.approve', $pembayaran->id_pembayaran) }}" 
+                                      method="POST" 
+                                      onsubmit="return confirm('Apakah Anda yakin ingin menyetujui pembayaran ini?')">
+                                    @csrf
+                                    <button type="submit" 
+                                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition">
+                                        Accept
+                                    </button>
+                                </form>
+                                
+                                <button onclick="openRejectModal({{ $pembayaran->id_pembayaran }}, '{{ $pembayaran->invoice->transaksi->membership->akun->nama_lengkap }}')" 
+                                        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition">
+                                    Reject
+                                </button>
                             </div>
-                        </div>
-                    </div>
-
-                </div>
-            </main>
-        </div>
-
-        <!-- Modal (Ini sudah benar) -->
-        <div x-cloak x-show="showModal" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div x-show="showModal" 
-                     x-transition:enter="ease-out duration-300"
-                     x-transition:enter-start="opacity-0"
-                     x-transition:enter-end="opacity-100"
-                     x-transition:leave="ease-in duration-200"
-                     x-transition:leave-start="opacity-100"
-                     x-transition:leave-end="opacity-0"
-                     class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
-                     @click="showModal = false" 
-                     aria-hidden="true"></div>
-
-                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                
-                <div x-show="showModal"
-                     x-transition:enter="ease-out duration-300"
-                     x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                     x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                     x-transition:leave="ease-in duration-200"
-                     x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                     x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                     class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                                    Bukti Pembayaran
-                                </h3>
-                                <div class="mt-2">
-                                    <img :src="imageUrl" alt="Bukti Pembayaran" class="w-full h-auto object-contain">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button type="button" 
-                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 sm:ml-3 sm:w-auto sm:text-sm"
-                                @click="showModal = false">
-                            Tutup
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+                        @else
+                            <span class="text-gray-400">-</span>
+                        @endif
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                        Tidak ada data pembayaran
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
-</body>
-</html>
+</div>
+
+<!-- Modal View Bukti Pembayaran -->
+<div id="buktiModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold text-gray-900">Detail Bukti Pembayaran</h3>
+            <button onclick="closeBuktiModal()" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        
+        <div id="buktiContent" class="space-y-4">
+            <!-- Content will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal Reject dengan Form Alasan -->
+<div id="rejectModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold text-gray-900">Tolak Pembayaran</h3>
+            <button onclick="closeRejectModal()" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        
+        <form id="rejectForm" method="POST">
+            @csrf
+            
+            <div class="mb-4">
+                <p class="text-sm text-gray-600 mb-2">
+                    Anda akan menolak pembayaran dari: <span id="rejectNama" class="font-semibold text-gray-900"></span>
+                </p>
+            </div>
+
+            <div class="mb-4">
+                <label for="alasan" class="block text-sm font-medium text-gray-700 mb-2">
+                    Alasan Penolakan <span class="text-red-500">*</span>
+                </label>
+                <textarea 
+                    name="alasan" 
+                    id="alasan" 
+                    rows="4" 
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    placeholder="Contoh: Bukti transfer tidak jelas, nominal tidak sesuai, rekening pengirim tidak valid, dll."></textarea>
+                <p class="mt-1 text-xs text-gray-500">Alasan ini akan dikirimkan kepada pengguna via email</p>
+            </div>
+
+            <div class="flex justify-end space-x-3">
+                <button 
+                    type="button" 
+                    onclick="closeRejectModal()" 
+                    class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition">
+                    Batal
+                </button>
+                <button 
+                    type="submit" 
+                    class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">
+                    Tolak Pembayaran
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@endsection
+
+@push('scripts')
+<script>
+// View Bukti Pembayaran
+function viewBukti(id) {
+    fetch(`/admin/verifikasi-pembayaran/bukti/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('buktiContent').innerHTML = `
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Nama</p>
+                            <p class="font-semibold">${data.nama}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Email</p>
+                            <p class="font-semibold">${data.email}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Jenis Paket</p>
+                            <p class="font-semibold">${data.jenis_paket}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Total Pembayaran</p>
+                            <p class="font-semibold">Rp ${data.total_pembayaran}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Metode</p>
+                            <p class="font-semibold">${data.metode}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Tanggal Pembayaran</p>
+                            <p class="font-semibold">${data.tgl_pembayaran}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">ID Pembayaran</p>
+                            <p class="font-semibold">${data.id_pembayaran}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">No. Invoice</p>
+                            <p class="font-semibold">${data.invoice_number}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600 mb-2">Bukti Transfer</p>
+                        <img src="${data.bukti_url}" alt="Bukti Pembayaran" class="w-full rounded-lg border border-gray-300">
+                    </div>
+                `;
+                document.getElementById('buktiModal').classList.remove('hidden');
+            } else {
+                alert('Gagal memuat bukti pembayaran');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat memuat data');
+        });
+}
+
+function closeBuktiModal() {
+    document.getElementById('buktiModal').classList.add('hidden');
+}
+
+// Reject Modal Functions
+function openRejectModal(id, nama) {
+    document.getElementById('rejectNama').textContent = nama;
+    document.getElementById('rejectForm').action = `/admin/verifikasi-pembayaran/reject/${id}`;
+    document.getElementById('alasan').value = '';
+    document.getElementById('rejectModal').classList.remove('hidden');
+}
+
+function closeRejectModal() {
+    document.getElementById('rejectModal').classList.add('hidden');
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const buktiModal = document.getElementById('buktiModal');
+    const rejectModal = document.getElementById('rejectModal');
+    
+    if (event.target === buktiModal) {
+        closeBuktiModal();
+    }
+    if (event.target === rejectModal) {
+        closeRejectModal();
+    }
+}
+
+// Close modal with ESC key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeBuktiModal();
+        closeRejectModal();
+    }
+});
+</script>
+@endpush

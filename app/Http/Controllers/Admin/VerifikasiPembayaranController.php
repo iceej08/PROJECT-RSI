@@ -4,38 +4,46 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pembayaran;
-use App\Models\Invoice;
-use App\Models\Transaksi;
-use App\Models\AkunMembership;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
 
 class VerifikasiPembayaranController extends Controller
 {
+    // Menampilkan daftar pembayaran
     public function index()
     {
         $pembayarans = Pembayaran::with(['invoice.transaksi.membership.akun', 'membership'])
             ->whereIn('status_pembayaran', ['pending', 'verified', 'rejected'])
-            // ->whereNotNull('bukti_pembayaran')
+            ->orderByRaw("
+                CASE 
+                    WHEN status_pembayaran = 'pending' THEN 1
+                    WHEN status_pembayaran = 'verified' THEN 2
+                    WHEN status_pembayaran = 'rejected' THEN 3
+                    ELSE 4
+                END
+            ")
             ->orderBy('created_at', 'desc')
             ->get();
         
         return view('admin.verifikasi-pembayaran.index', compact('pembayarans'));
     }
 
+  // Menampilkan detail bukti pembayaran
     public function viewBukti($id)
     {
         $pembayaran = Pembayaran::with(['invoice.transaksi.membership.akun'])
             ->findOrFail($id);
         
         if (!$pembayaran->bukti_pembayaran) {
-            return response()->json(['error' => 'Tidak ada bukti pembayaran'], 404);
+            return response()->json([
+                'success' => false,
+                'error' => 'Tidak ada bukti pembayaran'
+            ], 404);
         }
-
         $user = $pembayaran->invoice->transaksi->membership->akun;
-
         return response()->json([
             'success' => true,
             'bukti_url' => asset('storage/' . $pembayaran->bukti_pembayaran),
@@ -50,33 +58,37 @@ class VerifikasiPembayaranController extends Controller
         ]);
     }
 
+    // Approve pembayaran
     public function approve($id)
     {
         DB::beginTransaction();
         try {
-            $pembayaran = Pembayaran::with(['invoice.transaksi.membership'])->findOrFail($id);
+            $pembayaran = Pembayaran::with(['invoice.transaksi.membership.akun'])->findOrFail($id);
             
-            // Update payment status to verified
-            $pembayaran->update([
-                'status_pembayaran' => 'verified'
-            ]);
+            if ($pembayaran->status_pembayaran !== 'pending') {
+                return redirect()->back()->with('warning', 'Pembayaran ini sudah diproses sebelumnya.');
+            }
+            $updateData = ['status_pembayaran' => 'verified'];
+            
+            if ($this->hasAlasanPenolakanColumn()) {
+                $updateData['alasan_penolakan'] = null;
+            }
+            $pembayaran->update($updateData);
 
-            // Update transaction status to success
             $pembayaran->invoice->transaksi->update([
                 'status_transaksi' => 'success'
             ]);
 
-            // Activate membership and set proper dates
             $membership = $pembayaran->membership;
+            $user = $pembayaran->invoice->transaksi->membership->akun;
             
-            // Hitung ulang tanggal berdasarkan jenis paket
             $tglMulai = Carbon::now();
             $tglBerakhir = $pembayaran->jenis_paket === 'harian' 
                 ? Carbon::now()->addDay() 
                 : Carbon::now()->addMonth();
             
             $membership->update([
-                'status' => true, // AKTIFKAN MEMBERSHIP
+                'status' => true,
                 'tgl_mulai' => $tglMulai,
                 'tgl_berakhir' => $tglBerakhir,
             ]);
@@ -86,13 +98,12 @@ class VerifikasiPembayaranController extends Controller
             Log::info('Payment approved and membership activated:', [
                 'id_pembayaran' => $id, 
                 'id_membership' => $membership->id_membership,
-                'invoice_id' => $pembayaran->id_invoice,
-                'tgl_mulai' => $tglMulai->format('Y-m-d'),
-                'tgl_berakhir' => $tglBerakhir->format('Y-m-d'),
-                'status' => true
+                'user' => $user->nama_lengkap,
+                'admin' => auth()->guard('admin')->user()->nama_lengkap ?? 'System'
             ]);
 
-            return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi! Membership telah diaktifkan dari ' . $tglMulai->format('d M Y') . ' hingga ' . $tglBerakhir->format('d M Y') . '.');
+            return redirect()->route('admin.verifikasi-pembayaran.index')
+                ->with('success', 'Pembayaran berhasil diverifikasi! Membership ' . $user->nama_lengkap . ' telah diaktifkan dari ' . $tglMulai->format('d M Y') . ' hingga ' . $tglBerakhir->format('d M Y') . '.');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -101,45 +112,62 @@ class VerifikasiPembayaranController extends Controller
         }
     }
 
+// Reject pembayaran
     public function reject(Request $request, $id)
     {
         $request->validate([
-            'alasan' => 'nullable|string|max:500'
+            'alasan' => 'required|string|min:10|max:500'
+        ], [
+            'alasan.required' => 'Alasan penolakan wajib diisi',
+            'alasan.min' => 'Alasan penolakan minimal 10 karakter',
+            'alasan.max' => 'Alasan penolakan maksimal 500 karakter',
         ]);
 
         DB::beginTransaction();
         try {
-            $pembayaran = Pembayaran::with(['invoice.transaksi.membership'])->findOrFail($id);
+            $pembayaran = Pembayaran::with(['invoice.transaksi.membership.akun'])->findOrFail($id);
             
-            // Update payment status to rejected
-            $pembayaran->update([
-                'status_pembayaran' => 'rejected'
-            ]);
-
-            // Update transaction status to failed
+            if ($pembayaran->status_pembayaran !== 'pending') {
+                return redirect()->back()->with('warning', 'Pembayaran ini sudah diproses sebelumnya.');
+            }
+            $user = $pembayaran->invoice->transaksi->membership->akun;
+            $updateData = ['status_pembayaran' => 'rejected'];
+            
+            if ($this->hasAlasanPenolakanColumn()) {
+                $updateData['alasan_penolakan'] = $request->alasan;
+            } else {
+                // Log to file if column doesn't exist
+                Log::warning('alasan_penolakan column does not exist. Reason not saved to DB.', [
+                    'id_pembayaran' => $id,
+                    'alasan' => $request->alasan
+                ]);
+            }
+            $pembayaran->update($updateData);
             $pembayaran->invoice->transaksi->update([
                 'status_transaksi' => 'failed'
             ]);
-
-            // Keep membership status as false (inactive)
             $pembayaran->membership->update([
                 'status' => false
             ]);
-
             DB::commit();
 
             Log::info('Payment rejected:', [
-                'id_pembayaran' => $id, 
-                'id_invoice' => $pembayaran->id_invoice, 
-                'alasan' => $request->alasan
+                'id_pembayaran' => $id,
+                'user' => $user->nama_lengkap,
+                'alasan' => $request->alasan,
+                'admin' => auth()->guard('admin')->user()->nama_lengkap ?? 'System'
             ]);
-
-            return redirect()->back()->with('info', 'Pembayaran ditolak. User dapat mengupload ulang bukti pembayaran.');
+            return redirect()->route('admin.verifikasi-pembayaran.index')
+                ->with('info', 'Pembayaran ' . $user->nama_lengkap . ' ditolak. Alasan: ' . $request->alasan);
 
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Failed to reject payment: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Gagal menolak pembayaran: ' . $e->getMessage());
         }
+    }
+     private function hasAlasanPenolakanColumn()
+    {
+        return Schema::hasColumn('pembayaran', 'alasan_penolakan');
     }
 }

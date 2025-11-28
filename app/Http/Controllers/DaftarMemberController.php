@@ -10,6 +10,8 @@ use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class DaftarMemberController extends Controller
@@ -178,7 +180,26 @@ class DaftarMemberController extends Controller
         
         $harga = $this->getHarga($user->kategori, $hasHistory);
 
-        return view('pelanggan.invoice', compact('invoice', 'harga', 'hasHistory'));
+        // ================== BAGIAN PENTING: CEK ALASAN PENOLAKAN ==================
+        $alasanPenolakan = null;
+        
+        if ($invoice->pembayaran && $invoice->pembayaran->status_pembayaran === 'rejected') {
+            // Cek apakah kolom alasan_penolakan ada di database
+            if (Schema::hasColumn('pembayaran', 'alasan_penolakan')) {
+                $alasanPenolakan = $invoice->pembayaran->alasan_penolakan;
+                
+                // Log untuk debugging
+                Log::info('Alasan penolakan ditemukan:', [
+                    'id_pembayaran' => $invoice->pembayaran->id_pembayaran,
+                    'alasan' => $alasanPenolakan
+                ]);
+            } else {
+                Log::warning('Column alasan_penolakan tidak ditemukan di tabel pembayaran');
+            }
+        }
+        // ===========================================================================
+
+        return view('pelanggan.invoice', compact('invoice', 'harga', 'hasHistory', 'alasanPenolakan'));
     }
 
     // kalau user kembali ke halaman sebelumnya
@@ -232,18 +253,26 @@ class DaftarMemberController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $path = $file->storeAs('bukti_pembayaran', $filename, 'public');
 
+            // Prepare data untuk create/update
+            $pembayaranData = [
+                'id_membership' => $invoice->transaksi->id_membership,
+                'total_pembayaran' => $invoice->total_tagihan,
+                'metode' => $request->metode,
+                'bukti_pembayaran' => $path,
+                'status_pembayaran' => 'pending',
+                'jenis_paket' => $invoice->jenis_paket,
+                'tgl_pembayaran' => now(),
+            ];
+
+            // PENTING: Clear alasan penolakan saat upload ulang
+            if (Schema::hasColumn('pembayaran', 'alasan_penolakan')) {
+                $pembayaranData['alasan_penolakan'] = null;
+            }
+
             // Create or update payment record
             Pembayaran::updateOrCreate(
                 ['id_invoice' => $invoice->id_invoice],
-                [
-                    'id_membership' => $invoice->transaksi->id_membership,
-                    'total_pembayaran' => $invoice->total_tagihan,
-                    'metode' => $request->metode,
-                    'bukti_pembayaran' => $path,
-                    'status_pembayaran' => 'pending',
-                    'jenis_paket' => $invoice->jenis_paket,
-                    'tgl_pembayaran' => now(),
-                ]
+                $pembayaranData
             );
 
             DB::commit();

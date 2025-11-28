@@ -40,6 +40,32 @@
 
             <!-- Invoice Items -->
             <div class="p-6">
+                
+                <!-- =============== ALERT ALASAN PENOLAKAN (BAGIAN BARU) =============== -->
+                @if(isset($alasanPenolakan) && $alasanPenolakan)
+                <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-md">
+                    <div class="flex items-start">
+                        <svg class="w-8 h-8 text-red-500 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold text-red-800 mb-2">⚠️ Pembayaran Ditolak oleh Admin</h3>
+                            <div class="bg-red-100 border border-red-300 rounded-lg p-3 mb-3">
+                                <p class="text-sm font-semibold text-red-700 mb-1">Alasan Penolakan:</p>
+                                <p class="text-sm text-red-800 font-medium">{{ $alasanPenolakan }}</p>
+                            </div>
+                            <p class="text-sm text-red-700 mb-2">
+                                📝 Silakan perbaiki bukti pembayaran sesuai alasan di atas, lalu upload ulang di form bawah ini.
+                            </p>
+                            <p class="text-xs text-red-600">
+                                💡 Tip: Pastikan bukti transfer jelas, nominal sesuai, dan menggunakan rekening yang valid.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                @endif
+                <!-- ================================================================== -->
+
                 <div class="mb-6">
                     <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -76,7 +102,6 @@
                                 </td>
                             </tr>
 
-                            {{-- @if($harga['biaya_pendaftaran'] > 0) --}}
                             <tr class="border-b">
                                 <td class="py-4 px-4" colspan="3">
                                     <p class="font-medium">Biaya Pendaftaran Awal</p>
@@ -86,8 +111,6 @@
                                     Rp {{ number_format($harga['biaya_pendaftaran'], 0, ',', '.') }}
                                 </td>
                             </tr>
-                            {{-- @endif --}}
-
                         </tbody>
                     </table>
                 </div>
@@ -173,7 +196,7 @@
                     
                     @if($invoice->pembayaran && $invoice->pembayaran->status_pembayaran === 'rejected')
                         <div class="mb-4 p-3 bg-red-100 border border-red-300 rounded text-red-700 text-sm">
-                            ❌ Bukti pembayaran sebelumnya ditolak. Silakan upload ulang.
+                            ❌ <strong>Bukti pembayaran sebelumnya ditolak.</strong> Silakan upload ulang bukti yang valid.
                         </div>
                     @endif
 
@@ -235,12 +258,14 @@
                         Print Invoice
                     </button>
                     </span>
+                    @if(!$invoice->pembayaran || $invoice->pembayaran->status_pembayaran === 'rejected')
                     <form action="{{ route('pelanggan.invoice.cancel', $invoice->id_invoice) }}" method="POST">
                         @csrf
-                        <button type="submit" class="bg-red-500 border-2 border-gray-300 text-gray-600 px-6 py-3 rounded-lg hover:bg-red-700 transition flex items-center">
+                        <button type="submit" class="bg-red-500 border-2 border-gray-300 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition flex items-center">
                             Kembali & Pilih Paket Lain
                         </button>
                     </form>
+                    @endif
                 </div>
             </div>
 
