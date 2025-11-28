@@ -32,7 +32,7 @@
         </div>
         
         <nav class="hidden md:flex space-x-6 lg:space-x-8">
-            <a href="#" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Home</a>
+            <a href="#home" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Home</a>
             <a href="#promosi" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Promosi</a>
             <a href="#faq" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">FAQ</a>
             <a href="#pusat-bantuan" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Pusat Bantuan</a>
@@ -43,18 +43,19 @@
                  alt="Profil User" class="h-12 w-12 rounded-full object-cover">
             
             <a href="{{ route('profile') }}" class="hidden sm:block cursor-pointer">
-    <p class="font-semibold text-sm text-gray-900 leading-tight">
-        {{ $akun->nama_lengkap ?? 'Nama Pengguna' }}
-    </p>
+                <p class="font-semibold text-sm text-gray-900 leading-tight">
+                    {{ $akun->nama_lengkap ?? 'Nama Pengguna' }}
+                </p>
 
-    <p class="text-xs text-gray-700 leading-tight">
-        @if ($is_active)
-            Member Aktif
-        @else
-            Non-Member
-        @endif
-    </p>
-</a>
+                <p class="text-xs text-gray-700 leading-tight">
+                    @if ($is_active)
+                        Member Aktif
+                    @else
+                        Non-Member
+                    @endif
+                </p>
+            </a>
+            
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" title="Logout" class="p-2 rounded-full hover:bg-gray-100 transition duration-150">
@@ -64,77 +65,72 @@
         </div>
     </div>
 </header>
+
+<!-- SECTION HOME -->
 <section id="home" class="relative bg-cover bg-center h-screen" style="background-image: url('{{ asset('images/welcome.png') }}');">
-        <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-start px-16 py-2">
+    <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-start px-16 py-2">
 
-    <!-- WELCOME Italic -->
-    <h2 class="text-6xl md:text-8xl font-extrabold italic 
-        bg-gradient-to-t from-yellow-200 to-white
-        text-transparent bg-clip-text">
-        WELCOME,
-    </h2>
+        <!-- WELCOME Italic -->
+        <h2 class="text-6xl md:text-8xl font-extrabold italic 
+            bg-gradient-to-t from-yellow-200 to-white
+            text-transparent bg-clip-text">
+            WELCOME,
+        </h2>
 
-    <!-- USER UBSC Italic + Gradasi Orange → Putih -->
-    <h3 class="text-4xl md:text-8xl font-extrabold mt-2 
-           bg-gradient-to-t from-yellow-400 to-yellow-200
-           text-transparent bg-clip-text uppercase wrap-break-word text-center md:text-left">
-    {{ $akun->nama_lengkap ?? 'USER UBSC' }}
-</h3>
+        <!-- USER UBSC Italic + Gradasi Orange → Putih -->
+        <h3 class="text-4xl md:text-8xl font-extrabold mt-2 
+               bg-gradient-to-t from-yellow-400 to-yellow-200
+               text-transparent bg-clip-text uppercase wrap-break-word text-center md:text-left">
+            {{ $akun->nama_lengkap ?? 'USER UBSC' }}
+        </h3>
 
-    <p class="text-lg text-gray-200 mt-6 mb-2 max-w-lg leading-relaxed">
-        Let's burn our calories with Gym & Fitness membership.
-    </p>
+        <p class="text-lg text-gray-200 mt-6 mb-2 max-w-lg leading-relaxed">
+            Let's burn our calories with Gym & Fitness membership.
+        </p>
 
-    <a href="/membership" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-5 rounded-lg">
-        GET SPECIAL PRICE WITH MEMBERSHIP
-    </a>
-</div>
+        <a href="/membership" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-5 rounded-lg">
+            GET SPECIAL PRICE WITH MEMBERSHIP
+        </a>
+    </div>
 </section>
 
-   <section id="promosi" class="py-16 px-6 md:px-20 bg-white">
-    <h2 class="text-center text-2xl font-bold text-gray-800 mb-10 tracking-wide">NEWS</h2>
+<!-- SECTION PROMOSI (DINAMIS DARI DATABASE) -->
+<section id="promosi" class="py-16 px-6 md:px-20 bg-white">
+    <h2 class="text-center text-2xl font-bold text-gray-800 mb-10 tracking-wide">PROMOSI</h2>
 
+    @forelse($promosis as $index => $promosi)
     <div class="flex flex-col md:flex-row mb-10 gap-6">
-        <img src="{{ asset('images/foto 1.png') }}" alt="News 1" class="w-full md:w-1/3 rounded-xl shadow-lg">
+        @if($promosi->Gambar)
+        <img src="{{ asset('storage/' . $promosi->Gambar) }}" alt="{{ $promosi->Judul }}" class="w-full md:w-1/3 rounded-xl shadow-lg object-cover">
+        @else
+        <img src="{{ asset('images/default-promo.png') }}" alt="Default" class="w-full md:w-1/3 rounded-xl shadow-lg">
+        @endif
+        
         <div class="flex flex-col justify-center md:w-2/3">
-            <span class="text-sm text-gray-500 mb-1">2 days ago • Event News</span>
-            <h3 class="text-xl font-bold mb-2">Bela Diri</h3>
+            <span class="text-sm text-gray-500 mb-1">
+                {{ $promosi->created_at->diffForHumans() }} • Event News
+            </span>
+            <h3 class="text-xl font-bold mb-2">{{ $promosi->Judul }}</h3>
             <p class="text-gray-600 leading-relaxed mb-4">
-                Bela diri adalah seni mempertahankan diri dan melindungi diri dari ancaman menggunakan kekuatan fisik, 
-                yang bertujuan untuk menjaga keselamatan dan kesehatan diri, serta melatih kedisiplinan dan mental.  
-                <span class="hidden" id="extra-text-1">
-                    Berbagai jenis bela diri seperti pencak silat, karate, dan taekwondo tersebar di seluruh dunia, 
-                    masing-masing dengan teknik dan ciri khasnya sendiri.
+                {{ Str::limit($promosi->Deskripsi, 150) }}
+                <span class="hidden" id="extra-text-{{ $index }}">
+                    {{ Str::substr($promosi->Deskripsi, 150) }}
                 </span>
             </p>
-            <button onclick="toggleReadMore(1)" id="btn-1"
+            @if(strlen($promosi->Deskripsi) > 150)
+            <button onclick="toggleReadMore({{ $index }})" id="btn-{{ $index }}"
                     class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md w-fit">
                 Read More
             </button>
+            @endif
         </div>
     </div>
-
-    <div class="flex flex-col md:flex-row mb-10 gap-6">
-        <img src="{{ asset('images/foto 2.png') }}" alt="News 2" class="w-full md:w-1/3 rounded-xl shadow-lg">
-        <div class="flex flex-col justify-center md:w-2/3">
-            <span class="text-sm text-gray-500 mb-1">1 day ago • Event News</span>
-            <h3 class="text-xl font-bold mb-2">Lapangan Olahraga</h3>
-            <p class="text-gray-600 leading-relaxed mb-4">
-                Olahraga lapangan adalah aktivitas fisik yang dimainkan di area terbuka, seperti sepak bola, bola basket, dan voli. 
-                <span class="hidden" id="extra-text-2">
-                     Ciri utamanya adalah memerlukan lapangan dengan ukuran dan aturan spesifik untuk setiap cabang olahraga, 
-                     yang bisa berbentuk lapangan besar untuk tim besar atau lapangan kecil untuk permainan individu atau tim kecil. 
-                </span>
-            </p>
-            <button onclick="toggleReadMore(2)" id="btn-2"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md w-fit">
-                Read More
-            </button>
-        </div>
-    </div>
+    @empty
+    <p class="text-center text-gray-500">Belum ada promosi tersedia.</p>
+    @endforelse
 
     <div class="text-center mt-6">
-        <a href="#" class="text-orange-500 hover:underline font-semibold">SEE ALL NEWS</a>
+        <a href="#" class="text-orange-500 hover:underline font-semibold">LIHAT SEMUA PROMOSI</a>
     </div>
 </section>
 
@@ -153,74 +149,70 @@
     }
 </script>
 
+<!-- SECTION FAQ (DINAMIS DARI DATABASE) -->
+<section id="faq" class="bg-gray-50 py-16 px-6 md:px-20">
+    <h2 class="text-center text-2xl font-bold mb-10 tracking-wide">FAQ</h2>
 
-    <section id="faq" class="bg-gray-50 py-16 px-6 md:px-20">
+    <div class="max-w-2xl mx-auto space-y-4">
+        @forelse($faqs as $faq)
+        <details class="bg-white shadow-md rounded-lg p-4">
+            <summary class="font-semibold text-gray-800 cursor-pointer">{{ $faq->Pertanyaan }}</summary>
+            <p class="mt-2 text-gray-600">{{ $faq->Jawaban }}</p>
+        </details>
+        @empty
+        <p class="text-center text-gray-500">Belum ada FAQ tersedia.</p>
+        @endforelse
 
-        <h2 class="text-center text-2xl font-bold mb-10 tracking-wide">FAQ</h2>
-
-        <div class="max-w-2xl mx-auto space-y-4">
-            <details class="bg-white shadow-md rounded-lg p-4">
-                <summary class="font-semibold text-gray-800 cursor-pointer">Bagaimana metode untuk pembayaran</summary>
-                <p class="mt-2 text-gray-600">Kita menerima metode transfer melalui QRIS yang dapat discan dengan mudah.</p>
-            </details>
-
-            <details class="bg-white shadow-md rounded-lg p-4">
-                <summary class="font-semibold text-gray-800 cursor-pointer">Apakah saya bisa melihat pilihan paket untuk membership?</summary>
-                <p class="mt-2 text-gray-600">Tentu saja bisa, pelanggan dapat melihat pilihan paket membership pada saat mendaftarkan member.</p>
-            </details>
-
-            <details class="bg-white shadow-md rounded-lg p-4">
-                <summary class="font-semibold text-gray-800 cursor-pointer">Berapa lama akun member saya berlaku?</summary>
-                <p class="mt-2 text-gray-600">Akun member akan aktif selama 2 bulan setelah masa membership berakhir.</p>
-            </details>
-
-            <div class="text-center mt-6">
-                <a href="#" class="text-orange-500 hover:underline font-semibold">SEE ALL FAQ</a>
-            </div>
+        <div class="text-center mt-6">
+            <a href="#" class="text-orange-500 hover:underline font-semibold">SEE ALL FAQ</a>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section id="pusat-bantuan" class="bg-white py-12 px-6 md:px-20">
-        <div class="max-w-2xl mx-auto text-center">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 tracking-wide">PUSAT BANTUAN</h2>
-            <p class="text-gray-600 mb-8">
-                Ada pertanyaan lebih lanjut? Hubungi kami langsung melalui WhatsApp admin atau media sosial kami di bawah ini.
-            </p>
+<!-- SECTION PUSAT BANTUAN -->
+<section id="pusat-bantuan" class="bg-white py-12 px-6 md:px-20">
+    <div class="max-w-2xl mx-auto text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 tracking-wide">PUSAT BANTUAN</h2>
+        <p class="text-gray-600 mb-8">
+            Ada pertanyaan lebih lanjut? Hubungi kami langsung melalui WhatsApp admin atau media sosial kami di bawah ini.
+        </p>
 
-            <a href="https://wa.me/6285230559478"
-               target="_blank"
-               class="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-10 rounded-xl shadow-lg transition transform hover:-translate-y-1 duration-200">
-                💬 Hubungi Pusat Bantuan
+        <a href="https://wa.me/6285230559478"
+           target="_blank"
+           class="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-10 rounded-xl shadow-lg transition transform hover:-translate-y-1 duration-200">
+            💬 Hubungi Pusat Bantuan
+        </a>
+
+        <div class="flex justify-center space-x-6 mt-10">
+            <a href="https://instagram.com/ubsportcenter" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" 
+                     alt="Instagram" class="h-6 hover:scale-110 transition">
             </a>
-
-            <div class="flex justify-center space-x-6 mt-10">
-                <a href="https://instagram.com/ubsportcenter" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" 
-                         alt="Instagram" class="h-6 hover:scale-110 transition">
-                </a>
-                <a href="https://twitter.com/ubsportcenter" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" 
-                         alt="Twitter" class="h-6 hover:scale-110 transition">
-                </a>
-                <a href="yourgirl794@gmail.com">
-                    <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" 
-                         alt="Email" class="h-6 hover:scale-110 transition">
-                </a>
-            </div>
+            <a href="https://twitter.com/ubsportcenter" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" 
+                     alt="Twitter" class="h-6 hover:scale-110 transition">
+            </a>
+            <a href="mailto:yourgirl794@gmail.com">
+                <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" 
+                     alt="Email" class="h-6 hover:scale-110 transition">
+            </a>
         </div>
-    </section>
-    <footer class="bg-[#F4F6FF] text-[#152259] py-10 px-6">
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-[#F4F6FF] text-[#152259] py-10 px-6">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-20">
 
         <!-- KOLOM 1 — LOGO -->
         <div>
             <div class="flex items-start">
-    <a href="#" class="flex">
-        <img src="{{ asset('images/LogoBMU.svg') }}" class="h-32">
-        <img src="{{ asset('images/LogoUBSC.svg') }}" class="h-32">
-    </a>
-</div>
-    <p class="text-sm px-8 mt-4 ml-6">© 2025 UB Sport Center. All rights reserved.</p>
+                <a href="#" class="flex">
+                    <img src="{{ asset('images/LogoBMU.svg') }}" class="h-32">
+                    <img src="{{ asset('images/LogoUBSC.svg') }}" class="h-32">
+                </a>
+            </div>
+            <p class="text-sm px-8 mt-4 ml-6">© 2025 UB Sport Center. All rights reserved.</p>
         </div>
 
         <!-- KOLOM 2 — NAVBAR (MENURUN) -->

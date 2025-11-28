@@ -12,6 +12,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\FAQController;
 use App\Http\Controllers\Admin\PromosiController;
 use App\Http\Controllers\Admin\VerifikasiPembayaranController;
+use App\Http\Controllers\WelcomeController;
+
 
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 // Dan route /home tetap ada:
@@ -36,9 +38,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile');
-    Route::get('/welcome', function () {
-        return view('welcomepage');
-    })->name('welcome');
+    Route::get('/welcome', [WelcomeController::class, 'index'])->name('welcome');
 
     Route::get('/membership', [DaftarMemberController::class, 'showPilihanPaket'])->name('pelanggan.pilih-paket');
     Route::post('/membership/invoice', [DaftarMemberController::class, 'buatInvoice'])->name('pelanggan.buat-invoice');

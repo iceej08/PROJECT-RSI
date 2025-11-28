@@ -60,7 +60,7 @@
 
     <!-- SECTION PROMOSI (DINAMIS DARI DATABASE) -->
     <section id="promosi" class="py-16 px-6 md:px-20 bg-white">
-        <h2 class="text-center text-2xl font-bold text-gray-800 mb-10 tracking-wide">NEWS</h2>
+        <h2 class="text-center text-2xl font-bold text-gray-800 mb-10 tracking-wide">PROMOSI</h2>
 
         @forelse($promosis as $index => $promosi)
         <div class="flex flex-col md:flex-row mb-10 gap-6">
@@ -94,7 +94,7 @@
         @endforelse
 
         <div class="text-center mt-6">
-            <a href="#" class="text-orange-500 hover:underline font-semibold">SEE ALL NEWS</a>
+            <a href="#" class="text-orange-500 hover:underline font-semibold">lIHAT SEMUA PROMOSI</a>
         </div>
     </section>
 
@@ -147,7 +147,7 @@
             </a>
 
             <div class="flex justify-center space-x-6 mt-10">
-                a href="https://instagram.com/ubsportcenter" target="_blank">
+                <a href="https://instagram.com/ubsportcenter" target="_blank">
                     <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" 
                          alt="Instagram" class="h-6 hover:scale-110 transition">
                 </a>
