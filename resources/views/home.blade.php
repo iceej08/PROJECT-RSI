@@ -5,29 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UB Sport Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Alkatra:wght@400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
-<body class="text-gray-800">
+<body class="bg-[#152259] min-h-screen">
+@php
+    use Illuminate\Support\Facades\Auth;
+    $akun = Auth::user();
+    $membership = $akun->membership ?? null;
+    $is_active = $membership && now()->lte($membership->tgl_berakhir);
+@endphp
 
-    <header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-10 py-4 bg-gray-500 text-white shadow-md">
-        <div class="flex items-center space-x-3">
-            <img src="{{ asset('images/logo.png') }}" alt="UB Logo" class="h-10">
-            <h1 class="text-xl font-semibold text-blue-700">UB SPORT CENTER</h1>
+<header class="bg-[#F4F6FF] shadow-md sticky top-0 z-10">
+    <div class="mx-auto flex items-center justify-between px-12 py-2">
+        
+        <div class="flex items-center space-x-2">
+            <img src='{{ asset('images/LogoBMU.svg') }}' alt="UB Sport Center Logo" class="h-10 sm:h-14 w-10 sm:w-16">
+            <img src='{{ asset('images/LogoUBSC.svg') }}' alt="UB Sport Center Logo" class="h-10 sm:h-14 w-10 sm:w-16">
         </div>
-        <nav class="flex space-x-8 text-sm font-medium">
-            <a href="#home" class="hover:text-yellow-400">Home</a>
-            <a href="#promosi" class="hover:text-yellow-400">Promosi</a>
-            <a href="#faq" class="hover:text-yellow-400">FAQ</a>
-            <a href="#pusat-bantuan" class="hover:text-yellow-400">Pusat Bantuan</a>
+        
+        <nav class="hidden md:flex space-x-6 lg:space-x-8">
+            <a href="#" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Home</a>
+            <a href="#promosi" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Promosi</a>
+            <a href="#faq" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">FAQ</a>
+            <a href="#pusat-bantuan" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Pusat Bantuan</a>
         </nav>
-        <a href="#" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-5 rounded-lg">
+</a>
+<a href="{{ route('login') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-5 rounded-lg">
             Login
         </a>
-    </header>
-
-    <section id="home" class="relative bg-cover bg-center h-[650px]" style="background-image: url('{{ asset('images/bg.png') }}');">
-        <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-start px-10">
-            <h2 class="text-4xl md:text-5xl font-extrabold text-white">UNIVERSITAS BRAWIJAYA</h2>
-            <h3 class="text-5xl md:text-6xl font-extrabold text-yellow-400 mt-2">SPORT CENTER</h3>
+            </form>
+        </div>
+    </div>
+</header>
+    <section id="home" class="relative bg-cover bg-center h-screen" style="background-image: url('{{ asset('images/bg.png') }}');">
+        <div class="absolute inset-0 flex flex-col justify-center items-start px-16">
+            <h2 class="text-6xl md:text-6xl font-extrabold 
+        bg-gradient-to-t from-yellow-200 to-white
+        text-transparent bg-clip-text">UNIVERSITAS BRAWIJAYA</h2>
+            <h3 class="text-6xl md:text-8xl font-extrabold
+        bg-gradient-to-t from-yellow-300 to-yellow-200
+        text-transparent bg-clip-text">SPORT CENTER</h3>
             <p class="text-gray-200 mt-4 max-w-lg leading-relaxed">
                 UB Sport Center menyediakan unit usaha di bawah PT. Brawijaya Multi Usaha (BMU)
                 dengan berbagai fasilitas olahraga indoor dan outdoor untuk civitas akademika & umum.
@@ -37,7 +60,7 @@
 
     <!-- SECTION PROMOSI (DINAMIS DARI DATABASE) -->
     <section id="promosi" class="py-16 px-6 md:px-20 bg-white">
-        <h2 class="text-center text-2xl font-bold text-gray-800 mb-10 tracking-wide">NEWS</h2>
+        <h2 class="text-center text-2xl font-bold text-gray-800 mb-10 tracking-wide">PROMOSI</h2>
 
         @forelse($promosis as $index => $promosi)
         <div class="flex flex-col md:flex-row mb-10 gap-6">
@@ -71,7 +94,7 @@
         @endforelse
 
         <div class="text-center mt-6">
-            <a href="#" class="text-orange-500 hover:underline font-semibold">SEE ALL NEWS</a>
+            <a href="#" class="text-orange-500 hover:underline font-semibold">lIHAT SEMUA PROMOSI</a>
         </div>
     </section>
 
@@ -124,15 +147,15 @@
             </a>
 
             <div class="flex justify-center space-x-6 mt-10">
-                <a href="https://instagram.com/chocolateflaws" target="_blank">
+                <a href="https://instagram.com/ubsportcenter" target="_blank">
                     <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" 
                          alt="Instagram" class="h-6 hover:scale-110 transition">
                 </a>
-                <a href="https://twitter.com/filkomUB" target="_blank">
+                <a href="https://twitter.com/ubsportcenter" target="_blank">
                     <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" 
                          alt="Twitter" class="h-6 hover:scale-110 transition">
                 </a>
-                <a href="mailto:yourgirl794@gmail.com">
+                <a href="yourgirl794@gmail.com">
                     <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" 
                          alt="Email" class="h-6 hover:scale-110 transition">
                 </a>
@@ -140,23 +163,31 @@
         </div>
     </section>
 
-    <footer class="bg-blue-900 text-white py-10 px-6 md:px-20">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div>
-                <h3 class="text-2xl font-bold">UB SPORT CENTER</h3>
-                <p class="text-sm text-gray-300 mt-2">© 2025 UB Sport Center. All rights reserved.</p>
-            </div>
-            <div class="flex space-x-6 text-sm">
-                <a href="#home" class="hover:underline">Home</a>
-                <a href="#promosi" class="hover:underline">Promosi</a>
-                <a href="#faq" class="hover:underline">FAQ</a>
-                <a href="#pusat-bantuan" class="hover:underline">Pusat Bantuan</a>
-            </div>
-            <div class="flex space-x-3">
-                <a href="#"><img src="{{ asset('images/logo.png') }}" class="h-10"></a>
-            </div>
+    <footer class="bg-[#F4F6FF] text-[#152259] py-10 px-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-20">
+
+        <!-- KOLOM 1 — LOGO -->
+        <div>
+            <div class="flex items-start">
+    <a href="#" class="flex">
+        <img src="{{ asset('images/LogoBMU.svg') }}" class="h-32">
+        <img src="{{ asset('images/LogoUBSC.svg') }}" class="h-32">
+    </a>
+</div>
+    <p class="text-sm px-8 mt-4 ml-6">© 2025 UB Sport Center. All rights reserved.</p>
         </div>
-    </footer>
+
+        <!-- KOLOM 2 — NAVBAR (MENURUN) -->
+        <div class="flex flex-col space-y-2 text-sm">
+            <h4 class="font-bold text-lg mt-4 mb-2">Navigasi</h4>
+            <a href="#home" class="hover:underline">Home</a>
+            <a href="#promosi" class="hover:underline">Promosi</a>
+            <a href="#faq" class="hover:underline">FAQ</a>
+            <a href="#pusat-bantuan" class="hover:underline">Pusat Bantuan</a>
+        </div>
+
+    </div>
+</footer>
 
 </body>
 </html>

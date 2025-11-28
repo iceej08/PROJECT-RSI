@@ -22,7 +22,8 @@
                         <h1 class="text-4xl text-center font-bold text-[#004a73] mb-8 italic">
                             Let's Burn Together!
                         </h1>
-                        @if($errors->any())
+                        @include('alert')
+                        {{-- @if($errors->any())
                             <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl">
                                 <ul class="text-red-600 text-sm space-y-1">
                                     @foreach($errors->all() as $error)
@@ -30,7 +31,7 @@
                                     @endforeach
                                 </ul>
                             </div>
-                        @endif
+                        @endif --}}
                         <form action="{{ route('signup.post') }}" method="POST" class="mb-0">
                             @csrf
                             {{-- nama --}}

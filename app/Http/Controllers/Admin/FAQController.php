@@ -12,7 +12,7 @@ class FAQController extends Controller
     // Tampilkan semua FAQ
     public function index()
     {
-        $faqs = FAQ::orderBy('created_at', 'desc')->get();
+        $faqs = FAQ::all();
         return view('admin.faq.index', compact('faqs'));
     }
 
@@ -26,14 +26,17 @@ class FAQController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'Pertanyaan' => 'required',
-            'Jawaban' => 'required',
+            'pertanyaan' => 'required|string|max:500',
+            'jawaban' => 'required|string',
+        ], [
+            'pertanyaan.required' => 'Pertanyaan wajib diisi',
+            'jawaban.required' => 'Jawaban wajib diisi',
         ]);
 
         FAQ::create([
-            'Id_admin' => 1,
-            'Pertanyaan' => $request->Pertanyaan,
-            'Jawaban' => $request->Jawaban,
+            'Id_admin' => Auth::id() ?? 1,
+            'pertanyaan' => $request->pertanyaan,
+            'jawaban' => $request->jawaban,
         ]);
 
         return redirect()->route('admin.faq.index')
@@ -47,25 +50,28 @@ class FAQController extends Controller
         return view('admin.faq.edit', compact('faq'));
     }
 
-    // Update FAQ
+    // Update FAQ - METHOD INI YANG HILANG!
     public function update(Request $request, $id)
     {
         $request->validate([
-            'Pertanyaan' => 'required',
-            'Jawaban' => 'required',
+            'pertanyaan' => 'required|string|max:500',
+            'jawaban' => 'required|string',
+        ], [
+            'pertanyaan.required' => 'Pertanyaan wajib diisi',
+            'jawaban.required' => 'Jawaban wajib diisi',
         ]);
 
         $faq = FAQ::findOrFail($id);
         $faq->update([
-            'Pertanyaan' => $request->Pertanyaan,
-            'Jawaban' => $request->Jawaban,
+            'pertanyaan' => $request->pertanyaan,
+            'jawaban' => $request->jawaban,
         ]);
 
         return redirect()->route('admin.faq.index')
                          ->with('success', 'FAQ berhasil diupdate!');
     }
 
-    // Hapus FAQ
+    // Hapus FAQ - METHOD INI JUGA HILANG!
     public function destroy($id)
     {
         $faq = FAQ::findOrFail($id);

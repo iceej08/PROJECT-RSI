@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AkunUbsc;
@@ -14,15 +14,18 @@ use Carbon\Carbon;
 
 class AkunMemberController extends Controller
 {
-    /**
-     * Display member accounts list
-     */
     public function index(Request $request)
     {
         $search = $request->get('search');
         
-        $members = AkunUbsc::with('memberships')
-            ->whereHas('memberships')
+        $members = AkunUbsc::with(['memberships' => function($query) {
+                $query->whereHas('pembayarans', function($q) {
+                    $q->where('status_pembayaran', 'verified');
+                })->latest();
+            }])
+            ->whereHas('memberships.pembayarans', function($query) {
+                $query->where('status_pembayaran', 'verified');
+            })
             ->when($search, function($query, $search) {
                 return $query->where('nama_lengkap', 'like', "%{$search}%")
                             ->orWhere('email', 'like', "%{$search}%")
@@ -127,7 +130,7 @@ class AkunMemberController extends Controller
         }
     }
     
-    public function updateMembership(Request $request, $membershipId)
+    public function update(Request $request, $membershipId)
     {
         $request->validate([
             'tgl_mulai' => 'required|date',
@@ -149,17 +152,17 @@ class AkunMemberController extends Controller
     /**
      * Toggle membership status (Aktif/Non-aktif)
      */
-    public function toggleStatus($membershipId)
-    {
-        $membership = AkunMembership::findOrFail($membershipId);
-        $membership->status = !$membership->status;
-        $membership->save();
+    // public function toggleStatus($membershipId)
+    // {
+    //     $membership = AkunMembership::findOrFail($membershipId);
+    //     $membership->status = !$membership->status;
+    //     $membership->save();
 
-        $status = $membership->status ? 'Aktif' : 'Non-aktif';
+    //     $status = $membership->status ? 'Aktif' : 'Non-aktif';
         
-        return redirect()->back()
-            ->with('success', "Status membership berhasil diubah menjadi {$status}!");
-    }
+    //     return redirect()->back()
+    //         ->with('success', "Status membership berhasil diubah menjadi {$status}!");
+    // }
 
     /**
      * Delete member account

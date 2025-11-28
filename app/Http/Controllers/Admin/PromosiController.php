@@ -63,7 +63,7 @@ class PromosiController extends Controller
     public function show(string $id)
     {
         $promosi = Promosi::findOrFail($id);
-        return view('admin.promosi.show', compact('promosi'));
+        return route('admin.promosi.show', compact('promosi'));
     }
 
     /**

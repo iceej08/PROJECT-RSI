@@ -13,6 +13,7 @@
     </style>
 </head>
 <body class="bg-blue-100 min-h-screen p-4 md:p-8">
+    @include('alert')
     <div class="max-w-3xl mx-auto">
         <!-- Invoice Card -->
         <div class="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -39,48 +40,31 @@
 
             <!-- Invoice Items -->
             <div class="p-6">
-                <!-- Success Message -->
-                @if(session('success'))
-                    <div class="mb-4 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            {{ session('success') }}
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Error Message -->
-                @if(session('error'))
-                    <div class="mb-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                            </svg>
-                            {{ session('error') }}
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Validation Errors -->
-                @if($errors->any())
-                    <div class="mb-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded">
-                        <div class="flex">
-                            <svg class="w-5 h-5 mr-2 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                            </svg>
-                            <div>
-                                <p class="font-semibold mb-1">Terdapat kesalahan:</p>
-                                <ul class="list-disc list-inside text-sm">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
+                
+                <!-- =============== ALERT ALASAN PENOLAKAN (BAGIAN BARU) =============== -->
+                @if(isset($alasanPenolakan) && $alasanPenolakan)
+                <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-md">
+                    <div class="flex items-start">
+                        <svg class="w-8 h-8 text-red-500 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold text-red-800 mb-2">⚠️ Pembayaran Ditolak oleh Admin</h3>
+                            <div class="bg-red-100 border border-red-300 rounded-lg p-3 mb-3">
+                                <p class="text-sm font-semibold text-red-700 mb-1">Alasan Penolakan:</p>
+                                <p class="text-sm text-red-800 font-medium">{{ $alasanPenolakan }}</p>
                             </div>
+                            <p class="text-sm text-red-700 mb-2">
+                                📝 Silakan perbaiki bukti pembayaran sesuai alasan di atas, lalu upload ulang di form bawah ini.
+                            </p>
+                            <p class="text-xs text-red-600">
+                                💡 Tip: Pastikan bukti transfer jelas, nominal sesuai, dan menggunakan rekening yang valid.
+                            </p>
                         </div>
                     </div>
+                </div>
                 @endif
+                <!-- ================================================================== -->
 
                 <div class="mb-6">
                     <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
@@ -118,7 +102,6 @@
                                 </td>
                             </tr>
 
-                            {{-- @if($harga['biaya_pendaftaran'] > 0) --}}
                             <tr class="border-b">
                                 <td class="py-4 px-4" colspan="3">
                                     <p class="font-medium">Biaya Pendaftaran Awal</p>
@@ -128,8 +111,6 @@
                                     Rp {{ number_format($harga['biaya_pendaftaran'], 0, ',', '.') }}
                                 </td>
                             </tr>
-                            {{-- @endif --}}
-
                         </tbody>
                     </table>
                 </div>
@@ -215,7 +196,7 @@
                     
                     @if($invoice->pembayaran && $invoice->pembayaran->status_pembayaran === 'rejected')
                         <div class="mb-4 p-3 bg-red-100 border border-red-300 rounded text-red-700 text-sm">
-                            ❌ Bukti pembayaran sebelumnya ditolak. Silakan upload ulang.
+                            ❌ <strong>Bukti pembayaran sebelumnya ditolak.</strong> Silakan upload ulang bukti yang valid.
                         </div>
                     @endif
 
@@ -260,20 +241,31 @@
                     </svg>
                     <h3 class="font-bold text-gray-800 mb-2">Pembayaran Terverifikasi!</h3>
                     <p class="text-sm text-gray-600 mb-4">Selamat! Membership Anda sudah aktif.</p>
-                    <a href="{{ route('profil') }}" class="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition">
+                    <a href="{{ route('profile') }}" class="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition">
                         Cek Profil Member Kamu!
                     </a>
                 </div>
                 @endif
 
+                
                 <!-- Download Button -->
                 <div class="flex justify-center space-x-4">
+                    <span>
                     <button onclick="window.print()" class="bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition flex items-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                         </svg>
                         Print Invoice
                     </button>
+                    </span>
+                    @if(!$invoice->pembayaran || $invoice->pembayaran->status_pembayaran === 'rejected')
+                    <form action="{{ route('pelanggan.invoice.cancel', $invoice->id_invoice) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="bg-red-500 border-2 border-gray-300 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition flex items-center">
+                            Kembali & Pilih Paket Lain
+                        </button>
+                    </form>
+                    @endif
                 </div>
             </div>
 

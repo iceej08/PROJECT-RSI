@@ -10,51 +10,78 @@ use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class DaftarMemberController extends Controller
 {
-    /**
-     * Show membership package selection
-     */
+    // menampilkan pilihan paket membership
     public function showPilihanPaket()
     {
         $user = Auth::guard('web')->user();
         
-        // Cek apakah user sudah pernah punya membership sebelumnya
-        $hasHistory = AkunMembership::where('id_akun', $user->id_akun)->exists();
+        // CEK APAKAH USER SUDAH PUNYA INVOICE PENDING
+        $pendingInvoice = $this->getPendingInvoice($user->id_akun);
+        
+        if ($pendingInvoice) {
+            // Jika ada invoice pending, redirect langsung ke invoice
+            return redirect()->route('pelanggan.invoice.show', $pendingInvoice->id_invoice)
+                ->with('info', 'Anda masih memiliki invoice yang belum dibayar. Silakan selesaikan pembayaran terlebih dahulu.');
+        }
+        
+        // Cek apakah user sudah pernah punya membership yang VERIFIED (bukan pending)
+        $hasVerifiedHistory = AkunMembership::where('id_akun', $user->id_akun)
+            ->whereHas('pembayarans', function($query) {
+                $query->where('status_pembayaran', 'verified');
+            })
+            ->exists();
         
         // Tentukan harga berdasarkan kategori user
-        $harga = $this->getHarga($user->kategori, $hasHistory);
+        $harga = $this->getHarga($user->kategori, $hasVerifiedHistory);
         
-        return view('pelanggan.pilih-paket', compact('harga', 'hasHistory'));
+        return view('pelanggan.pilih-paket', compact('harga', 'hasVerifiedHistory'));
     }
 
-    /**
-     * Get harga based on user category
-     */
-    private function getHarga($kategori, $hasHistory)
+    private function getPendingInvoice($idAkun)
+    {
+        return Invoice::whereHas('transaksi.membership', function($query) use ($idAkun) {
+                $query->where('id_akun', $idAkun);
+            })
+            ->where(function($query) {
+                $query->whereDoesntHave('pembayaran')
+                    ->orWhereHas('pembayaran', function($q) {
+                        $q->where('status_pembayaran', 'pending');
+                    });
+            })
+            ->whereHas('transaksi', function($query) {
+                $query->where('status_transaksi', 'pending');
+            })
+            ->latest()
+            ->first();
+    }
+
+    // harga berdasarkan kategori dan apkh pernah daftar sebagai member
+    private function getHarga($kategori, $hasVerifiedHistory)
     {
         if ($kategori) {
             $harga = [
                 'harian' => 25000,
                 'bulanan' => 130000,
-                'biaya_pendaftaran'=> $hasHistory ? 0 : 25000,
+                'biaya_pendaftaran'=> $hasVerifiedHistory ? 0 : 25000,
             ];
         } else {
             $harga = [
                 'harian' => 35000,
                 'bulanan' => 162000,
-                'biaya_pendaftaran'=> $hasHistory ? 0 : 27000,
+                'biaya_pendaftaran'=> $hasVerifiedHistory ? 0 : 27000,
             ];
         }
         
         return $harga;
     }
 
-    /**
-     * Process package selection and create invoice
-     */
+    // pembuatan invoice
     public function buatInvoice(Request $request)
     {
         $request->validate([
@@ -62,8 +89,23 @@ class DaftarMemberController extends Controller
         ]);
 
         $user = Auth::guard('web')->user();
-        $hasHistory = AkunMembership::where('id_akun', $user->id_akun)->exists();
-        $harga = $this->getHarga($user->kategori, $hasHistory);
+        
+        // CEK LAGI APAKAH ADA INVOICE PENDING (double check)
+        $pendingInvoice = $this->getPendingInvoice($user->id_akun);
+        
+        if ($pendingInvoice) {
+            return redirect()->route('pelanggan.invoice.show', $pendingInvoice->id_invoice)
+                ->with('info', 'Anda masih memiliki invoice yang belum dibayar.');
+        }
+        
+        // Cek history membership yang VERIFIED
+        $hasVerifiedHistory = AkunMembership::where('id_akun', $user->id_akun)
+            ->whereHas('pembayarans', function($query) {
+                $query->where('status_pembayaran', 'verified');
+            })
+            ->exists();
+            
+        $harga = $this->getHarga($user->kategori, $hasVerifiedHistory);
 
         DB::beginTransaction();
         try {
@@ -127,20 +169,74 @@ class DaftarMemberController extends Controller
         }
 
         $user = $invoice->transaksi->membership->akun;
+        
+        // Hitung hasHistory berdasarkan membership yang VERIFIED
         $hasHistory = AkunMembership::where('id_akun', $user->id_akun)
             ->where('id_membership', '!=', $invoice->transaksi->id_membership)
+            ->whereHas('pembayarans', function($query) {
+                $query->where('status_pembayaran', 'verified');
+            })
             ->exists();
         
         $harga = $this->getHarga($user->kategori, $hasHistory);
 
-        return view('pelanggan.invoice', compact('invoice', 'harga', 'hasHistory'));
+        // ================== BAGIAN PENTING: CEK ALASAN PENOLAKAN ==================
+        $alasanPenolakan = null;
+        
+        if ($invoice->pembayaran && $invoice->pembayaran->status_pembayaran === 'rejected') {
+            // Cek apakah kolom alasan_penolakan ada di database
+            if (Schema::hasColumn('pembayaran', 'alasan_penolakan')) {
+                $alasanPenolakan = $invoice->pembayaran->alasan_penolakan;
+                
+                // Log untuk debugging
+                Log::info('Alasan penolakan ditemukan:', [
+                    'id_pembayaran' => $invoice->pembayaran->id_pembayaran,
+                    'alasan' => $alasanPenolakan
+                ]);
+            } else {
+                Log::warning('Column alasan_penolakan tidak ditemukan di tabel pembayaran');
+            }
+        }
+        // ===========================================================================
+
+        return view('pelanggan.invoice', compact('invoice', 'harga', 'hasHistory', 'alasanPenolakan'));
     }
+
+    // kalau user kembali ke halaman sebelumnya
+    public function cancelInvoice($id)
+    {
+        $user = Auth::guard('web')->user();
+        $invoice = Invoice::with(['transaksi.membership.akun', 'pembayaran'])
+            ->findOrFail($id);
+
+        // Pastikan invoice milik user
+        $invoice = 
+        DB::table('invoice')->join('transaksi', 'transaksi.id_transaksi', '=', 'invoice.id_transaksi')
+            ->join('akun_membership', 'akun_membership.id_membership', '=', 'transaksi.id_membership')
+            ->join('akun_ubsc', 'akun_ubsc.id_akun', '=', 'akun_membership.id_akun')
+            ->where('invoice.id_invoice', $id)
+            ->where('akun_ubsc.id_akun', $user->id_akun)
+            ->where('invoice.status_kirim', 'sent')
+            ->select('invoice.id_invoice')
+            ->first();
+
+        if (!$invoice) {
+            return redirect()->back()->with('error', 'Invoice tidak ditemukan atau tidak dapat dibatalkan.');
+        }
+
+        // Hapus atau batalkan invoice
+        DB::table('invoice')->where('id_invoice', $id)->delete();
+        
+        return redirect()->route('pelanggan.pilih-paket')
+                        ->with('info', 'Silakan pilih paket membership.');
+    }
+
 
     public function unggahBuktiBayar(Request $request, $invoiceId)
     {
         $request->validate([
             'bukti_pembayaran' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'metode' => 'required|in:transfer_bank,e_wallet,qris',
+            'metode' => 'required|in:transfer_bank,qris',
         ]);
 
         $invoice = Invoice::findOrFail($invoiceId);
@@ -157,18 +253,26 @@ class DaftarMemberController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $path = $file->storeAs('bukti_pembayaran', $filename, 'public');
 
+            // Prepare data untuk create/update
+            $pembayaranData = [
+                'id_membership' => $invoice->transaksi->id_membership,
+                'total_pembayaran' => $invoice->total_tagihan,
+                'metode' => $request->metode,
+                'bukti_pembayaran' => $path,
+                'status_pembayaran' => 'pending',
+                'jenis_paket' => $invoice->jenis_paket,
+                'tgl_pembayaran' => now(),
+            ];
+
+            // PENTING: Clear alasan penolakan saat upload ulang
+            if (Schema::hasColumn('pembayaran', 'alasan_penolakan')) {
+                $pembayaranData['alasan_penolakan'] = null;
+            }
+
             // Create or update payment record
-            $pembayaran = Pembayaran::updateOrCreate(
+            Pembayaran::updateOrCreate(
                 ['id_invoice' => $invoice->id_invoice],
-                [
-                    'id_membership' => $invoice->transaksi->id_membership,
-                    'total_pembayaran' => $invoice->total_tagihan,
-                    'metode' => $request->metode,
-                    'bukti_pembayaran' => $path,
-                    'status_pembayaran' => 'pending',
-                    'jenis_paket' => $invoice->jenis_paket,
-                    'tgl_pembayaran' => now(),
-                ]
+                $pembayaranData
             );
 
             DB::commit();

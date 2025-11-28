@@ -14,6 +14,7 @@
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-100 to-blue-200 min-h-screen flex items-center justify-center p-4">
+    @include('alert')
     <div class="w-full max-w-lg">
         <!-- Card Container -->
         <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 text-center">
