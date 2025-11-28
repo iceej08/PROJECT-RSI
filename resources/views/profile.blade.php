@@ -30,8 +30,6 @@
         $tgl_daftar = isset($akun->created_at) ? \Carbon\Carbon::parse($akun->created_at)->translatedFormat('d F Y') : '-';
     @endphp
     <!-- NAVBAR START -->
-    
-<body>
 
 <header class="bg-[#F4F6FF] shadow-md sticky top-0 z-10">
     <div class="mx-auto flex items-center justify-between px-12 py-2">
@@ -49,7 +47,7 @@
         </nav>
 
         <div class="flex items-center space-x-3">
-            <img src="{{ $akun->foto_identitas ? asset('storage/' . $akun->foto_identitas) : asset('images/profilBas.svg') }}" 
+            <img src="{{ $akun->foto_identitas ? asset('storage/' . $akun->foto_identitas) : asset('images/profile.svg') }}" 
                  alt="Profil User" class="h-12 w-12 rounded-full object-cover">
             
             <a href="{{ route('profile') }}" class="hidden sm:block cursor-pointer">
@@ -128,7 +126,7 @@
                             <div class="flex flex-col sm:flex-row justify-between items-start pb-8">
                                 <div class="flex items-start">
                                     <img 
-                                        src="{{ $akun->foto_identitas ? asset('storage/' . $akun->foto_identitas) : asset('images/profilBas.svg') }}" 
+                                        src="{{ $akun->foto_identitas ? asset('storage/' . $akun->foto_identitas) : asset('images/profile.svg') }}" 
                                         alt="{{ $akun->nama_lengkap ?? 'Profil User' }}" 
                                         class="h-24 w-24 rounded-full mr-5 object-cover"
                                     >
@@ -267,19 +265,19 @@
                         <h2 class="text-xl font-semibold mb-4 border-b pb-3 border-gray-100">Keuntungan Member ✨</h2>
                         <ul class="space-y-3">
                             <li class="flex items-start">
-                                <img src='images/check.svg' alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
+                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
                                 <p>Akses unlimited konten premium dan fasilitas utama.</p>
                             </li>
                             <li class="flex items-start">
-                                <img src='images/check.svg' alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
+                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
                                 <p>Diskon 20% untuk semua produk dan penyewaan lapangan.</p>
                             </li>
                             <li class="flex items-start">
-                                <img src='images/check.svg' alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
+                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
                                 <p>Support prioritas 24/7 melalui live chat.</p>
                             </li>
                             <li class="flex items-start">
-                                <img src='images/check.svg' alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
+                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
                                 <p>Akses early access untuk fitur dan event baru.</p>
                             </li>
                         </ul>

@@ -14,9 +14,6 @@ use Carbon\Carbon;
 
 class AkunMemberController extends Controller
 {
-    /**
-     * Display member accounts list
-     */
     public function index(Request $request)
     {
         $search = $request->get('search');
@@ -133,7 +130,7 @@ class AkunMemberController extends Controller
         }
     }
     
-    public function updateMembership(Request $request, $membershipId)
+    public function update(Request $request, $membershipId)
     {
         $request->validate([
             'tgl_mulai' => 'required|date',
@@ -155,17 +152,17 @@ class AkunMemberController extends Controller
     /**
      * Toggle membership status (Aktif/Non-aktif)
      */
-    public function toggleStatus($membershipId)
-    {
-        $membership = AkunMembership::findOrFail($membershipId);
-        $membership->status = !$membership->status;
-        $membership->save();
+    // public function toggleStatus($membershipId)
+    // {
+    //     $membership = AkunMembership::findOrFail($membershipId);
+    //     $membership->status = !$membership->status;
+    //     $membership->save();
 
-        $status = $membership->status ? 'Aktif' : 'Non-aktif';
+    //     $status = $membership->status ? 'Aktif' : 'Non-aktif';
         
-        return redirect()->back()
-            ->with('success', "Status membership berhasil diubah menjadi {$status}!");
-    }
+    //     return redirect()->back()
+    //         ->with('success', "Status membership berhasil diubah menjadi {$status}!");
+    // }
 
     /**
      * Delete member account

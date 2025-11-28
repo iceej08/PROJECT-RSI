@@ -4,7 +4,6 @@
 @section('page-title', 'Manajemen Akun Member')
 
 @section('content')
-@include('alert')
 <div class="bg-white rounded-xl shadow-md">
     <div class="p-6 border-b flex items-center justify-between">
         <div>
@@ -175,10 +174,10 @@
                                     @if($membership)
                                         @if($membership->status && $membership->tgl_berakhir >= now())
                                             <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">Aktif</span>
-                                        @elseif($membership->tgl_berakhir < now() && $membership->tgl_berakhir->copy()->addMonths(2) > now())
-                                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">Non-aktif</span>
-                                        @else
+                                        @elseif($membership->tgl_berakhir->copy()->addMonths(2) < now())
                                             <span class="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">Kedaluwarsa</span>
+                                        @else
+                                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">Non-Aktif</span>
                                         @endif
                                     @endif
                                 </td>
@@ -241,7 +240,7 @@
                                                 </button>
                                             </div>
                                             
-                                            <form action="{{ route('admin.akun-member.updateMembership', $membership->id_membership) }}" method="POST" class="mt-4">
+                                            <form action="{{ route('admin.akun-member.update', $membership->id_membership) }}" method="POST" class="mt-4">
                                                 @csrf
                                                 @method('PUT')
                                                 

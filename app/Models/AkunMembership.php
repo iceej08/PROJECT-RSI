@@ -47,21 +47,36 @@ class AkunMembership extends Model
         return $this->hasMany(Pembayaran::class, 'id_membership');
     }
 
-   public function isActive(): bool
+    public function isActive(): array
 {
-    $today = Carbon::now()->startOfDay();
+    $now = Carbon::now();
 
-    return $this->status 
-        && $this->tgl_berakhir instanceof Carbon
-        && $this->tgl_berakhir->endOfDay()->greaterThanOrEqualTo($today);
+    if (!$this->status) {
+        return [
+            'status' => 'Pending',
+            'is_active' => false,
+            'days_remaining' => 0,
+        ];
+    }
+
+    if ($this->status && $this->tgl_mulai && $now->between($this->tgl_mulai, $this->tgl_berakhir)) {
+    return [
+        'status' => 'Aktif',
+        'is_active' => true,
+        'days_remaining' => $now->diffInDays($this->tgl_berakhir) + 1,
+    ];
+}
+
+    return [
+        'status' => 'Non Aktif',
+        'is_active' => false,
+        'days_remaining' => 0,
+    ];
 }
 
     public function daysRemaining(): int
-    {
-        if (!$this->isActive()) {
-            return 0;
-        }
-        
-        return Carbon::now()->diffInDays($this->tgl_berakhir, false) + 1;
-    }
+{
+    $active = $this->isActive();
+    return $active['days_remaining'] ?? 0;
+}
 }

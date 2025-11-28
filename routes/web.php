@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\PromosiController;
 use App\Http\Controllers\Admin\UbscAccountController;
 use App\Http\Controllers\Admin\VerificationController;
 use App\Http\Controllers\Admin\VerifikasiPembayaranController;
+use App\Http\Controllers\WelcomeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -49,10 +51,7 @@ Route::get('/signup/verification-pending', [SignupController::class, 'showVerifi
 Route::middleware(['auth:web'])->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile');
-
-    Route::get('/welcome', function () {
-        return view('welcomepage');
-    })->name('welcome');
+    Route::get('/welcome', [WelcomeController::class, 'index'])->name('welcome');
 
     Route::get('/membership', [DaftarMemberController::class, 'showPilihanPaket'])
         ->name('pelanggan.pilih-paket');
@@ -88,18 +87,8 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     */
 
     Route::resource('akun-member', AkunMemberController::class);
-    Route::post('/akun-member/{id}/toggle-status', [AkunMemberController::class, 'toggleStatus'])
-        ->name('akun-member.toggle-status');
-    Route::put('/akun-member/{id}', [AkunMemberController::class, 'updateMembership'])
-        ->name('akun-member.updateMembership');
-    Route::post('/akun-member', [AkunMemberController::class, 'tambahMember'])
-        ->name('akun-member.tambahMember');
-
-    /*
-    |--------------------------------------------------------------------------
-    | Verification Menu (Verifikasi Warga UB)
-    |--------------------------------------------------------------------------
-    */
+    Route::put('/akun-member/{id}', [AkunMemberController::class, 'update'])->name('akun-member.update');
+    Route::post('/akun-member', [AkunMemberController::class, 'tambahMember'])->name('akun-member.tambahMember');
 
     Route::prefix('verification')->name('verification.')->group(function () {
         Route::get('/', [VerificationController::class, 'index'])->name('index');
