@@ -16,29 +16,32 @@
     </style>
 </head>
 <body class="bg-[#152259] min-h-screen">
-    
+
+
     {{-- LOGIC INITIATOR --}}
     @php
         $is_active = $member_data['is_active'] ?? false;
-        
+
+
         $status_class = $is_active ? 'bg-green-500' : 'bg-red-500';
         $icon_class = $is_active ? 'text-green-500' : 'text-red-500';
         $progress_color = $is_active ? 'bg-green-500' : 'bg-red-500';
         $kategori = ($akun->kategori ?? 0) == 1 ? 'Warga UB' : 'Umum';
-        
+
+
         // Formatting tanggal bergabung (asumsi 'created_at' di model AkunUbsc)
         $tgl_daftar = isset($akun->created_at) ? \Carbon\Carbon::parse($akun->created_at)->translatedFormat('d F Y') : '-';
     @endphp
-    <!-- NAVBAR START -->
-
-<header class="bg-[#F4F6FF] shadow-md sticky top-0 z-10">
+    <header class="bg-[#F4F6FF] shadow-md sticky top-0 z-10">
     <div class="mx-auto flex items-center justify-between px-12 py-2">
-        
+
+
         <div class="flex items-center space-x-2">
             <img src='{{ asset('images/LogoBMU.svg') }}' alt="UB Sport Center Logo" class="h-10 sm:h-14 w-10 sm:w-16">
             <img src='{{ asset('images/LogoUBSC.svg') }}' alt="UB Sport Center Logo" class="h-10 sm:h-14 w-10 sm:w-16">
         </div>
-        
+
+
         <nav class="hidden md:flex space-x-6 lg:space-x-8">
             <a href="/welcome" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Home</a>
             <a href="/welcome#promosi" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Promosi</a>
@@ -46,14 +49,17 @@
             <a href="/welcome#pusat-bantuan" class="text-gray-700 hover:text-gray-900 font-medium hover:font-bold transition-colors duration-200">Pusat Bantuan</a>
         </nav>
 
+
         <div class="flex items-center space-x-3">
-            <img src="{{ $akun->foto_identitas ? asset('storage/' . $akun->foto_identitas) : asset('images/profile.svg') }}" 
+            <img src="{{ $akun->foto_identitas ? asset('images/profile.svg'): asset('images/profile.svg') }}"
                  alt="Profil User" class="h-12 w-12 rounded-full object-cover">
-            
+
+
             <a href="{{ route('profile') }}" class="hidden sm:block cursor-pointer">
     <p class="font-semibold text-sm text-gray-900 leading-tight">
         {{ $akun->nama_lengkap ?? 'Nama Pengguna' }}
     </p>
+
 
     <p class="text-xs text-gray-700 leading-tight">
         @if ($is_active)
@@ -65,6 +71,8 @@
 </a>
 
 
+
+
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" title="Logout" class="p-2 rounded-full hover:bg-gray-100 transition duration-150">
@@ -74,19 +82,18 @@
         </div>
     </div>
 </header>
-    <!-- NAVBAR END -->
-
-    <!-- PROFILE TITLE START -->
-    <div x-data="{ detailOpen: false }" class=" mx-auto min-h-screen text-gray-900 flex"> 
+    <div x-data="{ detailOpen: false }" class=" mx-auto min-h-screen text-gray-900 flex">
         {{-- Main Content --}}
         <main class="flex-1 p-4 bg-[#152259] overflow-y-auto">
-            
+
+
             <div class="flex flex-col sm:flex-row justify-between text-gray-900 items-center px-12 pb-4 sm:items-center">
                 <div class="text-[#CEDDE6]">
                     <h1 class="text-3xl font-bold">Profil Saya</h1>
                     <p class="text-sm">Kelola informasi profil dan status membership Anda</p>
                 </div>
-                
+
+
                 <div class="flex items-center mt-4 sm:mt-0 space-x-4">
                     <a href="" class="bg-[#3B82F6] hover:bg-blue-600 text-white py-2 px-4 rounded-lg flex items-center text-sm font-medium transition duration-150 shadow-md">
                         <i class="fas fa-edit h-4 w-4 mr-2"></i>
@@ -100,17 +107,17 @@
                     </div>
                 </div>
             </div>
-            <!-- PROFILE TITLE END -->
-
-            <!-- CARD PROFILE START -->
             <div x-data="{ detailOpen: false }" class="flex flex-col gap-6 px-12">
-                
+
+
                 <section class="profile-container p-2 md:p-8 bg-white rounded-xl shadow-lg border border-gray-50">
-        
+
+
                     <div class="flex justify-between items-center pb-2 border-b border-gray-100">
                         <h2 class="text-2xl font-semibold text-gray-800">Informasi Profil</h2>
-                        
-                        <button 
+
+
+                        <button
                             @click="detailOpen = !detailOpen"
                             class="bg-[#3B82F6] text-white py-2 px-4 rounded-lg flex items-center text-sm font-medium transition duration-50 shadow-md hover:bg-blue-600"
                         >
@@ -119,33 +126,41 @@
                         </button>
                     </div>
 
+
                     <div class="flex flex-col lg:flex-row gap-8 pt-6">
-                        
+
+
                         <div class="left-panel flex-grow lg:w-2/3">
-                            
+
+
                             <div class="flex flex-col sm:flex-row justify-between items-start pb-8">
                                 <div class="flex items-start">
-                                    <img 
-                                        src="{{ $akun->foto_identitas ? asset('storage/' . $akun->foto_identitas) : asset('images/profile.svg') }}" 
-                                        alt="{{ $akun->nama_lengkap ?? 'Profil User' }}" 
+                                    <img
+                                        src="{{ $akun->foto_identitas ? asset('images/profile.svg') : asset('images/profile.svg') }}"
+                                        alt="{{ $akun->nama_lengkap ?? 'Profil User' }}"
                                         class="h-24 w-24 rounded-full mr-5 object-cover"
                                     >
                                     <div class="pt-2">
                                         <p class="text-xl font-bold text-gray-800">{{ $akun->nama_lengkap ?? 'Nama Tidak Diketahui' }}</p>
                                         <p class="text-sm text-gray-600">ID Akun: **UBSC{{ str_pad($akun->id_akun ?? 0, 5, '0', STR_PAD_LEFT) }}**</p>
-                                        @if (isset($membership) && $membership)
-                                            <p class="text-sm text-gray-600">ID Member: **MBR{{ str_pad($membership->id_membership ?? 0, 7, '0', STR_PAD_LEFT) }}**</p>
-                                        @endif
+                                        @if (isset($membership) && $membership && $member_data['status_text'] !== 'PENDING VERIFIKASI')
+    <p class="text-sm text-gray-600">ID Member: **MBR{{ str_pad($membership->id_membership ?? 0, 7, '0', STR_PAD_LEFT) }}**</p>
+@endif
+
+
                                     </div>
                                 </div>
-                                
+
+
                                 <div class="flex-shrink-0 mt-4 sm:mt-0">
-                                    <img src="{{ asset('images/qrcode.svg') }}" alt="QR Code Member" class="h-28 w-28 p-2 border border-gray-200 rounded-lg"> 
+                                    <img src="{{ asset('images/qrcode.svg') }}" alt="QR Code Member" class="h-28 w-28 p-2 border border-gray-200 rounded-lg">
                                 </div>
                             </div>
-                            
+
+
                             <div class="space-y-6">
-                                
+
+
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-10 gap-x-10">
                                     <div>
                                         <p class="text-sm font-medium text-gray-700 mb-2">Nama Lengkap</p>
@@ -156,7 +171,8 @@
                                         <p class="bg-[#F9FAFB] rounded-lg text-lg font-semibold text-gray-700 py-2 pl-4">{{ $akun->email ?? '-' }}</p>
                                     </div>
                                 </div>
-                                
+
+
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-10">
                                     <div>
                                         <p class="text-sm font-medium text-gray-700 mb-2">Kategori Akun</p>
@@ -169,46 +185,102 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        
+
+
+
+
                         @if (isset($membership) && $membership)
-                            {{-- BLOK MEMBER --}}
-                            <div x-show="detailOpen" x-transition.duration.500ms class="right-panel lg:w-1/3 rounded-xl flex flex-col gap-6">
-                                
-                                <div class="text-center">
-                                    <h3 class="text-lg font-semibold text-gray-800 pb-2">Status Membership </h3>
-                                    
-                                    <div class="flex justify-center items-center mx-auto mb-4 ">
-                                        <img src='{{ asset('images/member.SVG') }}' alt="UB Sport Center Logo" class="h-16 sm:h-18 w-16 sm:w-18">
-                                    </div>
-                                    
-                                    <span class="inline-block px-4 py-1.5 bg-green-600 text-white text-xs font-bold rounded-full uppercase tracking-wider mb-2shadow-sm mb-2">
-                                        AKTIF
-                                    </span><p class="text-sm text-gray-800">Mulai: {{ $member_data['tgl_mulai_formatted'] }}</p>
-                                            <p class="text-sm text-gray-800">Berakhir: {{ $member_data['tgl_berakhir_formatted'] }}</p>
+                            {{-- BLOK MEMBER / PENDING SEBAGAI NON-AKTIF --}}
+<div x-show="detailOpen" x-transition.duration.500ms class="right-panel lg:w-1/3 rounded-xl flex flex-col gap-6 text-center justify-center items-center">
 
-                                </div>
 
-                        <div class="mt-4">
-                    <div class="flex justify-between items-center mb-1">
-                        <p class="text-gray-600 font-medium">Sisa waktu</p>
+    <h3 class="text-lg font-semibold text-gray-800 pb-2">Status Membership </h3>
 
-                        <p class="text-green-600 font-bold">
-                            {{ $member_data['sisa_waktu_text'] }}
-                        </p>
-                    </div>
 
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="{{ $progress_color }} h-2.5 rounded-full transition-all duration-700"
-                            style="width: {{ round($member_data['progress_width']) }}%;">
-                        </div>
-                    </div>
+    <div class="flex justify-center items-center mx-auto">
+    @if ($member_data['status_text'] === 'PENDING VERIFIKASI')
+        <img src='{{ asset('images/pending.SVG') }}' alt="Pending Member UBSC" class="h-16 sm:h-18 w-16 sm:w-18">
+    @elseif ($member_data['is_active'])
+        <img src='{{ asset('images/member.SVG') }}' alt="Member UBSC" class="h-16 sm:h-18 w-16 sm:w-18">
+    @else
+        <img src='{{ asset('images/nonMember.SVG') }}' alt="Non-Member UBSC" class="h-16 sm:h-18 w-16 sm:w-18">
+    @endif
+</div>
 
-                    <a href="/membership"
-                    class="mt-5 block w-full text-center bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold shadow-md">
-                    PERPANJANG MEMBERSHIP
-                    </a>
-                </div>
+
+
+
+    {{-- BADGE STATUS DINAMIS --}}
+    @if ($member_data['status_text'] === 'PENDING VERIFIKASI')
+        <span class="inline-block px-4 py-1.5 bg-yellow-500 text-white text-xs font-bold rounded-full uppercase tracking-wider shadow-sm ">
+            PENDING VERIFIKASI
+        </span>
+        <p class="text-sm text-gray-600">Status membership Anda sedang menunggu verifikasi admin.</p>
+        {{-- Tombol menunggu verifikasi --}}
+        <a href="#"
+           class="w-full text-center bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg text-sm font-medium transition duration-150 shadow-md">
+           MENUNGGU VERIFIKASI
+        </a>
+
+
+
+
+    @elseif ($member_data['is_active'])
+        <span class="inline-block px-4 py-1.5 bg-green-500 text-white text-xs font-bold rounded-full uppercase tracking-wider shadow-sm ">
+            {{ $member_data['status_text'] }}
+        </span>
+        <div class="text-sm text-gray-800 leading-tight">
+            <div>
+                <span class="block">Mulai: {{ $member_data['tgl_mulai_formatted'] }}</span>
+                <span class="block">Berakhir: {{ $member_data['tgl_berakhir_formatted'] }}</span>
+            </div>
+
+
+</div>
+
+
+
+
+        {{-- Progress bar --}}
+        <div class="w-full">
+            <div class="flex justify-between items-center">
+                <p class="text-gray-600 font-medium">Sisa waktu</p>
+                <p class="text-green-600 font-bold">{{ $member_data['sisa_waktu_text'] }}</p>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="{{ $progress_color }} h-2.5 rounded-full transition-all duration-700"
+                     style="width: {{ round($member_data['progress_width']) }}%;"></div>
+            </div>
+        </div>
+
+
+        {{-- Tombol perpanjang membership --}}
+        <a href="/membership"
+           class="w-full text-center bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-sm font-medium transition duration-150 shadow-md">
+           PERPANJANG MEMBERSHIP
+        </a>
+
+
+    @else
+        {{-- NON-AKTIF / KADALUARSA --}}
+        <span class="inline-block px-4 py-1.5 bg-red-600 text-white text-xs font-bold rounded-full uppercase tracking-wider mb-2 shadow-sm">
+            KADALUARSA
+        </span>
+        <p class="text-sm text-gray-600 mb-2">Anda belum memiliki status Premium Membership. Dapatkan akses eksklusif sekarang!</p>
+
+
+        {{-- Tombol daftar membership --}}
+        <a href="/membership"
+           class="mt-5 block w-full text-center bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-semibold shadow-md">
+           DAFTAR MEMBERSHIP
+        </a>
+    @endif
+
+
+</div>
+
+
+
 
                         @else
                         {{-- BLOK NON-MEMBER --}}
@@ -226,67 +298,170 @@
                                 </a>
                             </div>
                         @endif
-                        
+
+
                     </div>
                 </section>
-            <!-- CARD PROFILE END -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+{{-- AKSI CEPAT --}}
+<section x-data="{ openHistory: false }" class="bg-white rounded-xl shadow-lg p-6">
+    <h2 class="text-xl font-semibold mb-4 border-b pb-3 border-gray-100">Aksi Cepat ⚡</h2>
 
-            <!-- CARD OTHERS START -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {{-- AKSI CEPAT --}}
-                    <section class="bg-white rounded-xl shadow-lg p-6">
-                        <h2 class="text-xl font-semibold mb-4 border-b pb-3 border-gray-100">Aksi Cepat ⚡</h2>
-                        <ul class="divide-y divide-gray-100">
-                            <li class="group flex justify-between items-center py-3 hover:bg-gray-50 px-2 -mx-2 rounded transition duration-150 cursor-pointer">
-                                <div class="flex items-center">
-                                    <img src='{{ asset('images/riwayat.SVG') }}' alt="UB Sport Center Logo" class="mr-4 h-2 sm:h-5 w-2 sm:w-5">
-                                    <p class="font-medium">Riwayat Membership</p>
-                                </div>
-                                <i class="fas fa-chevron-right text-gray-400 group-hover:text-blue-500 text-sm"></i>
-                            </li>
-                            <li class="group flex justify-between items-center py-3 hover:bg-gray-50 px-2 -mx-2 rounded transition duration-150 cursor-pointer">
-                                <div class="flex items-center">
-                                    <img src='{{ asset('images/kartu.SVG') }}' alt="UB Sport Center Logo" class="mr-4 h-2 sm:h-5 w-2 sm:w-5">
-                                    <p class="font-medium">Metode Pembayaran</p>
-                                </div>
-                                <i class="fas fa-chevron-right text-gray-400 group-hover:text-blue-500 text-sm"></i>
-                            </li>
-                            <li class="group flex justify-between items-center py-3 hover:bg-gray-50 px-2 -mx-2 rounded transition duration-150 cursor-pointer">
-                                <div class="flex items-center">
-                                    <img src='{{ asset('images/bantuan.SVG') }}' alt="UB Sport Center Logo" class="mr-4 h-2 sm:h-5 w-2 sm:w-5">
-                                    <p class="font-medium">Bantuan & Support</p>
-                                </div>
-                                <i class="fas fa-chevron-right text-gray-400 group-hover:text-blue-500 text-sm"></i>
-                            </li>
-                        </ul>
-                    </section>
+
+    <ul class="divide-y divide-gray-100">
+
+
+        {{-- === Riwayat Membership (TOGGLE) === --}}
+        <li class="py-3">
+
+
+            <button
+                @click="openHistory = !openHistory"
+                class="w-full flex justify-between items-center py-2 hover:bg-gray-50 rounded transition duration-150 cursor-pointer"
+            >
+                <div class="flex items-center">
+                    <img src='{{ asset('images/riwayat.SVG') }}' class="mr-4 h-5 w-5">
+                    <p class="font-medium">Riwayat Membership</p>
+                </div>
+
+
+                <i
+                    :class="openHistory ? 'fas fa-chevron-down text-blue-500' : 'fas fa-chevron-right text-gray-400'"
+                    class="text-sm transition-all"
+                ></i>
+            </button>
+
+
+            {{-- === ISI TOGGLE === --}}
+            <div
+                x-show="openHistory"
+                x-transition.duration.300ms
+                class="mt-3 ml-10 pb-3 space-y-4"
+            >
+                @forelse ($history_data as $item)
+                    <div class="flex justify-between items-center">
+
+
+                        <div class="flex items-center gap-3">
+
+
+                            {{-- Icon --}}
+                            @if ($item['status'] === 'Aktif')
+    {{-- AKTIF --}}
+    <div class="w-5 h-5 rounded-full bg-green-500 flex justify-center items-center text-white text-xs">✓</div>
+
+
+@elseif ($item['status'] === 'Kadaluarsa')
+    {{-- KADALUARSA --}}
+    <div class="w-5 h-5 rounded-full bg-red-500 flex justify-center items-center text-white text-xs">✕</div>
+
+
+@elseif ($item['status'] === 'Pending')
+    {{-- PENDING --}}
+    <div class="w-5 h-5 rounded-full bg-yellow-500 flex justify-center items-center text-white text-xs">⏳</div>
+
+
+@else
+    {{-- FALLBACK SAFETY --}}
+    <div class="w-5 h-5 rounded-full bg-gray-400 flex justify-center items-center text-white text-xs">?</div>
+@endif
+
+
+
+
+                            <div>
+                                <p class="font-semibold text-gray-800">{{ $item['nama_paket'] }}</p>
+                                <p class="text-sm text-gray-500">{{ $item['tgl_mulai'] }} - {{ $item['tgl_berakhir'] }}</p>
+                                <p class="text-xs text-gray-400">Durasi: {{ $item['durasi'] }}</p>
+                            </div>
+
+
+                        </div>
+
+
+                        {{-- Badge --}}
+                        <span class="px-2 py-1 text-xs rounded-full
+    @if($item['status'] === 'Aktif')
+        bg-green-100 text-green-600
+    @elseif($item['status'] === 'Kadaluarsa')
+        bg-red-100 text-red-600
+    @elseif($item['status'] === 'Pending')
+        bg-yellow-100 text-yellow-600
+    @else
+        bg-gray-100 text-gray-600
+    @endif
+">
+    {{ strtoupper($item['status']) }}
+</span>
+
+
+
+
+                    </div>
+                @empty
+                    <p class="text-sm text-gray-500 italic">Belum ada riwayat membership.</p>
+                @endforelse
+
+
+            </div>
+        </li>
+
+
+        {{-- === Metode Pembayaran === --}}
+        <li class="py-3">
+            <div class="group flex justify-between items-center py-2 hover:bg-gray-50 px-2 -mx-2 rounded cursor-pointer">
+                <div class="flex items-center">
+                    <img src='{{ asset('images/kartu.SVG') }}' class="mr-4 h-5 w-5">
+                    <p class="font-medium">Metode Pembayaran</p>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400 group-hover:text-blue-500 text-sm"></i>
+            </div>
+        </li>
+
+
+        {{-- === Bantuan === --}}
+        <li class="py-3">
+            <div class="group flex justify-between items-center py-2 hover:bg-gray-50 px-2 -mx-2 rounded cursor-pointer">
+                <div class="flex items-center">
+                    <img src='{{ asset('images/bantuan.SVG') }}' class="mr-4 h-5 w-5">
+                    <p class="font-medium">Bantuan & Support</p>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400 group-hover:text-blue-500 text-sm"></i>
+            </div>
+        </li>
+
+
+    </ul>
+</section>
+
+
+
+
                     {{-- KEUNTUNGAN MEMBER --}}
                     <section class="bg-white rounded-xl shadow-lg p-6">
                         <h2 class="text-xl font-semibold mb-4 border-b pb-3 border-gray-100">Keuntungan Member ✨</h2>
                         <ul class="space-y-3">
                             <li class="flex items-start">
-                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
+                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3">
                                 <p>Akses unlimited konten premium dan fasilitas utama.</p>
                             </li>
                             <li class="flex items-start">
-                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
+                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3">
                                 <p>Diskon 20% untuk semua produk dan penyewaan lapangan.</p>
                             </li>
                             <li class="flex items-start">
-                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
+                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3">
                                 <p>Support prioritas 24/7 melalui live chat.</p>
                             </li>
                             <li class="flex items-start">
-                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3"> 
+                                <img src="{{ asset('images/check.svg') }}" alt="Check Icon" class="w-5 h-5 mt-1 mr-3">
                                 <p>Akses early access untuk fitur dan event baru.</p>
                             </li>
                         </ul>
                     </section>
                 </div>
             </div>
-            <!-- CARD OTHERS END -->
-             
-        </main>
+            </main>
     </div>
 
 </body>

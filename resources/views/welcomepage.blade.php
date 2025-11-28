@@ -20,7 +20,7 @@
     use Illuminate\Support\Facades\Auth;
     $akun = Auth::user();
     $membership = $akun->membership ?? null;
-    $is_active = $membership && now()->lte($membership->status);
+    $is_active = $member_data['is_active'] ?? false;
 @endphp
 
 <header class="bg-[#F4F6FF] shadow-md sticky top-0 z-10">
