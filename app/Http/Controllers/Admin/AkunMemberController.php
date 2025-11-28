@@ -152,17 +152,17 @@ class AkunMemberController extends Controller
     /**
      * Toggle membership status (Aktif/Non-aktif)
      */
-    public function toggleStatus($membershipId)
-    {
-        $membership = AkunMembership::findOrFail($membershipId);
-        $membership->status = !$membership->status;
-        $membership->save();
+    // public function toggleStatus($membershipId)
+    // {
+    //     $membership = AkunMembership::findOrFail($membershipId);
+    //     $membership->status = !$membership->status;
+    //     $membership->save();
 
-        $status = $membership->status ? 'Aktif' : 'Non-aktif';
+    //     $status = $membership->status ? 'Aktif' : 'Non-aktif';
         
-        return redirect()->back()
-            ->with('success', "Status membership berhasil diubah menjadi {$status}!");
-    }
+    //     return redirect()->back()
+    //         ->with('success', "Status membership berhasil diubah menjadi {$status}!");
+    // }
 
     /**
      * Delete member account

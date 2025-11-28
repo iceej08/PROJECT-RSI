@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
+use App\Models\Admin;
 
 class LoginController extends Controller
 {
@@ -58,7 +59,7 @@ class LoginController extends Controller
             ->first();
 
             if ($memberAktif) {
-                return redirect()->route('profile'); // ganti dengan nama route profil kamu
+                return redirect()->route('profile');
             }
 
             return redirect()->route('welcome')
